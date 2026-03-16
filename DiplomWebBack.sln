@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37012.4 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiplomWebBack.Api", "DiplomWebBack.Api\DiplomWebBack.Api.csproj", "{EEE85181-A4F0-4C00-B81B-FC0A239F087B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9A5D01B2-135E-4B2C-BB78-FB950112EF3C} = {9A5D01B2-135E-4B2C-BB78-FB950112EF3C}
+		{BD0F8E99-DF42-40D1-AB0D-88136F45F03F} = {BD0F8E99-DF42-40D1-AB0D-88136F45F03F}
+		{E01E7F5C-BCE5-4923-8F14-4A236B1426AF} = {E01E7F5C-BCE5-4923-8F14-4A236B1426AF}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiplomWebBack.Domain", "DiplomWebBack.Domain\DiplomWebBack.Domain.csproj", "{BD0F8E99-DF42-40D1-AB0D-88136F45F03F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiplomWebBack.Application", "DiplomWebBack.Application\DiplomWebBack.Application.csproj", "{9A5D01B2-135E-4B2C-BB78-FB950112EF3C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BD0F8E99-DF42-40D1-AB0D-88136F45F03F} = {BD0F8E99-DF42-40D1-AB0D-88136F45F03F}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiplomWebBack.Infrastructure", "DiplomWebBack.Infrastructure\DiplomWebBack.Infrastructure.csproj", "{E01E7F5C-BCE5-4923-8F14-4A236B1426AF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BD0F8E99-DF42-40D1-AB0D-88136F45F03F} = {BD0F8E99-DF42-40D1-AB0D-88136F45F03F}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EEE85181-A4F0-4C00-B81B-FC0A239F087B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEE85181-A4F0-4C00-B81B-FC0A239F087B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEE85181-A4F0-4C00-B81B-FC0A239F087B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEE85181-A4F0-4C00-B81B-FC0A239F087B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD0F8E99-DF42-40D1-AB0D-88136F45F03F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD0F8E99-DF42-40D1-AB0D-88136F45F03F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD0F8E99-DF42-40D1-AB0D-88136F45F03F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD0F8E99-DF42-40D1-AB0D-88136F45F03F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A5D01B2-135E-4B2C-BB78-FB950112EF3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A5D01B2-135E-4B2C-BB78-FB950112EF3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A5D01B2-135E-4B2C-BB78-FB950112EF3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A5D01B2-135E-4B2C-BB78-FB950112EF3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E01E7F5C-BCE5-4923-8F14-4A236B1426AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E01E7F5C-BCE5-4923-8F14-4A236B1426AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E01E7F5C-BCE5-4923-8F14-4A236B1426AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E01E7F5C-BCE5-4923-8F14-4A236B1426AF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A3D1C37F-3D3C-4D4E-B3DE-C429E664C6A2}
+	EndGlobalSection
+EndGlobal
