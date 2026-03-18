@@ -2,11 +2,6 @@
 using DiplomWebBack.DomainRepos.Repos;
 using DiplomWebBack.Infrastructure.Repos;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiplomWebBack.Infrastructure.Extensions
 {
@@ -14,8 +9,9 @@ namespace DiplomWebBack.Infrastructure.Extensions
     {
         public static IServiceCollection RegisterRepositories(this IServiceCollection services)
         {
-          //  services.AddScoped<IBaseRepository<T>, BaseRepository<T>();
             services.AddScoped<ITagsRepository, TagsRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserActivatorRepository, UserActivatorRepository>();
 
             return services;
         }

@@ -1,4 +1,5 @@
-﻿using DiplomWebBack.Application.Usecases.Command;
+﻿using DiplomWebBack.Api.Middlewares;
+using DiplomWebBack.Application.Usecases.Command.Tags;
 using DiplomWebBack.Infrastructure.Context;
 using DiplomWebBack.Infrastructure.Extensions;
 using Mapster;
@@ -10,7 +11,7 @@ namespace DiplomWebBack.Api
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -79,6 +80,8 @@ namespace DiplomWebBack.Api
 
             var app = builder.Build();
 
+         //   app.UseMiddleware<ExceptionHandlingMiddleware>();
+
             using (var scope = app.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -91,6 +94,12 @@ namespace DiplomWebBack.Api
             {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "Diplom API v1");
             });
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                await SeedData.SeedDataAsync(db);
+            }
 
             app.UseAuthentication();
             app.UseAuthorization();

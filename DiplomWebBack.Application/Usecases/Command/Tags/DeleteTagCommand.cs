@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiplomWebBack.Application.Usecases.Command
+namespace DiplomWebBack.Application.Usecases.Command.Tags
 {
     public record DeleteTagCommand(Guid Id) : IRequest;
 }

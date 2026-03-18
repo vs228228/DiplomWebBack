@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiplomWebBack.Application.Usecases.Command
+namespace DiplomWebBack.Application.Usecases.Query.Tags
 {
-    public record AddTagCommand(string Title) : IRequest<Guid>;
+    public record GetTagByIdQuery(Guid Id) : IRequest<TagResponseDto?>;
 }

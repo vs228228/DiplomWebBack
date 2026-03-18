@@ -1,5 +1,5 @@
 ﻿using DiplomWebBack.Application.DTOs.Tags.Responses;
-using DiplomWebBack.Application.Usecases.Query;
+using DiplomWebBack.Application.Usecases.Query.Tags;
 using DiplomWebBack.Domain.CustomExceptions;
 using DiplomWebBack.DomainRepos.Repos;
 using Mapster;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiplomWebBack.Application.Usecases.QueryHandlers
+namespace DiplomWebBack.Application.Usecases.QueryHandlers.Tags
 {
     public class GetTagByIdQueryHandler
     : IRequestHandler<GetTagByIdQuery, TagResponseDto?>

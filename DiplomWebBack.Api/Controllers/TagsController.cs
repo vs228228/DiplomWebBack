@@ -1,5 +1,9 @@
-﻿using DiplomWebBack.Application.Usecases.Command;
+﻿using DiplomWebBack.Application.DTOs.Tags.Responses;
+using DiplomWebBack.Application.Usecases.Command;
+using DiplomWebBack.Application.Usecases.Command.Tags;
 using DiplomWebBack.Application.Usecases.Query;
+using DiplomWebBack.Application.Usecases.Query.Tags;
+using DiplomWebBack.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,11 +26,11 @@ namespace DiplomWebBack.Api.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetPaginatedTagsAsync(
+        public async Task<ActionResult<PaginatedList<TagResponseDto>>> GetPaginatedTagsAsync([FromQuery] int pageNumber = 1, int pageSize = 10,
             CancellationToken cancellationToken = default)
         {
             var result = await _mediator.Send(
-                new GetPaginatedTagsQuery(),
+                new GetPaginatedTagsQuery(pageSize, pageNumber),
                 cancellationToken);
 
             return Ok(result);
@@ -39,7 +43,7 @@ namespace DiplomWebBack.Api.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetTagByIdAsync(
+        public async Task<ActionResult<TagResponseDto>> GetTagByIdAsync(
             [FromRoute] Guid id,
             CancellationToken cancellationToken = default)
         {
@@ -57,7 +61,7 @@ namespace DiplomWebBack.Api.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> AddTagAsync(
+        public async Task<ActionResult<Guid>> AddTagAsync(
             [FromQuery] string Title,
             CancellationToken cancellationToken = default)
         {

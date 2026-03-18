@@ -1,6 +1,9 @@
-﻿using DiplomWebBack.Application.DTOs.Tags.Requests;
-using DiplomWebBack.Application.Usecases.Command;
+﻿using DiplomWebBack.Application.DTOs.Auth.Request;
+using DiplomWebBack.Application.DTOs.Tags.Requests;
+using DiplomWebBack.Application.DTOs.Tags.Responses;
+using DiplomWebBack.Application.Usecases.Command.Auth;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DiplomWebBack.Api.Controllers
@@ -23,7 +26,7 @@ namespace DiplomWebBack.Api.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost("login")]
-        public async Task<IActionResult> LoginIntoSystemAsync([FromBody] LoginRequestDto dto, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<TokensResponseDto>> LoginIntoSystemAsync([FromBody] LoginRequestDto dto, CancellationToken cancellationToken = default)
         {
             var tokens = await _mediator.Send(new LoginIntoSystemCommand(dto), cancellationToken);
 
@@ -37,11 +40,23 @@ namespace DiplomWebBack.Api.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> RegisterNewUserAsync([FromBody] LoginRequestDto dto, CancellationToken cancellationToken = default)
+        public async Task<ActionResult> RegisterNewUserAsync([FromBody] RegisterRequestDto dto, CancellationToken cancellationToken = default)
         {
-            var tokens = await _mediator.Send(new LoginIntoSystemCommand(dto), cancellationToken);
+            await _mediator.Send(new RegisterUserCommand(dto), cancellationToken);
 
-            return Ok(tokens);
+            return Ok();
+        }
+
+        /// <summary>
+        /// Проверить работает ли авторизация
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpPost("is-me-auth")]
+        public async Task<ActionResult> CheckIsUserAuth(CancellationToken cancellationToken)
+        {
+            return Ok();
         }
     }
 }

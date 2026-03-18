@@ -1,5 +1,5 @@
 ﻿using DiplomWebBack.Application.DTOs.Tags.Responses;
-using DiplomWebBack.Application.Usecases.Command;
+using DiplomWebBack.Application.Usecases.Command.Tags;
 using DiplomWebBack.Domain.CustomExceptions;
 using DiplomWebBack.Domain.Entities;
 using DiplomWebBack.DomainRepos.Repos;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiplomWebBack.Application.Usecases.CommandHandlers
+namespace DiplomWebBack.Application.Usecases.CommandHandlers.Tags
 {
     public class AddTagCommandHandler
     : IRequestHandler<AddTagCommand, Guid>
