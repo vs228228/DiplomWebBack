@@ -24,4 +24,8 @@
     <ProjectReference Include="..\DiplomWebBack.Infrastructure\DiplomWebBack.Infrastructure.csproj" />
   </ItemGroup>
 
+	<PropertyGroup>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
+
 </Project>

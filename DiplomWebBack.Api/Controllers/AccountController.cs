@@ -29,11 +29,25 @@ namespace DiplomWebBack.Api.Controllers
         {
             var tokens = await _mediator.Send(new LoginIntoSystemCommand(dto), cancellationToken);
 
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = false, // HTTP → ОБЯЗАТЕЛЬНО false
+                SameSite = SameSiteMode.Lax, // безопасный вариант для HTTP
+                Expires = DateTimeOffset.UtcNow.AddDays(7) // подгони под refresh token
+            };
+
+            // Access token (обычно короткоживущий)
+            Response.Cookies.Append("accessToken", tokens.AccessToken, cookieOptions);
+
+            // Refresh token (долгоживущий)
+            Response.Cookies.Append("refreshToken", tokens.RefreshToken, cookieOptions);
+
             return Ok(tokens);
         }
 
         /// <summary>
-        /// Позволит создать юзера, однако войти нужно будет всё равно. Вернёт тольк ок. Ещё не реализован
+        /// Позволит создать юзера, однако войти нужно будет всё равно. Вернёт тольк ок.
         /// </summary>
         /// <param name="dto"></param>
         /// <param name="cancellationToken"></param>

@@ -20,12 +20,18 @@ namespace DiplomWebBack.Infrastructure.Repos
                 .Take(pageSize)
                 .ToListAsync(cancellationToken);
 
+            var totalCount = await _context.Tags.CountAsync(cancellationToken);
+
             return new PaginatedList<Tag>
             {
                 List = tags,
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalCount = await _context.Tags.CountAsync(cancellationToken),
+                Meta = new MetaForPaginatedList()
+                {
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
+                    TotalCount = totalCount,
+                    TotalPageCount = (int)Math.Ceiling(totalCount / (double)pageSize)
+                },
             };
         }
 

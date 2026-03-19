@@ -6,6 +6,7 @@ using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 namespace DiplomWebBack.Api
 {
@@ -64,6 +65,10 @@ namespace DiplomWebBack.Api
                             Array.Empty<string>()
                         }
                     });
+
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFilename);
+                options.IncludeXmlComments(xmlPath);
             });
 
             /*builder.Services.AddAuthentication("Bearer")
@@ -93,6 +98,7 @@ namespace DiplomWebBack.Api
             app.UseSwaggerUI(options =>
             {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "Diplom API v1");
+                
             });
 
             using (var scope = app.Services.CreateScope())

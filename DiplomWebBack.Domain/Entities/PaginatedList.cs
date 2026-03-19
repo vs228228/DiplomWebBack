@@ -9,8 +9,6 @@ namespace DiplomWebBack.Domain.Entities
     public class PaginatedList<T>
     {
         public ICollection<T> List { get; set; }
-        public int PageNumber { get; set; }
-        public int PageSize { get; set; }
-        public int TotalCount { get; set; }
+        public MetaForPaginatedList Meta { get; set; }
     }
 }

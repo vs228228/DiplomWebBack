@@ -23,12 +23,18 @@ namespace DiplomWebBack.Infrastructure.Repos
                 .Include(ua => ua.User)
                 .ToListAsync(cancellationToken);
 
+            int totalCount = await _context.Activators.Where(a => a.AprovedById == null).CountAsync();
+
             return new PaginatedList<UserActivator>()
             {
                 List = list,
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalCount = await _context.Activators.CountAsync()
+                Meta = new MetaForPaginatedList()
+                {
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
+                    TotalCount = totalCount,
+                    TotalPageCount = (int)Math.Ceiling(totalCount / (double)pageSize)
+                },
             };
         }
 
