@@ -7,6 +7,6 @@ namespace DiplomWebBack.DomainRepos.Repos
     {
         Task<Tag> GetByIdAsync(Guid id, CancellationToken cancellationToken = default, bool trackChanges = false);
         Task<Tag> GetByTitleAsync(string name, CancellationToken cancellationToken = default, bool trackChanges = false);
-        Task<PaginatedList<Tag>> GetAllAsync(int pageSize, int pageNumber, CancellationToken cancellationToken);
+        Task<PaginatedList<Tag>> GetAllAsync(int pageSize, int pageNumber, string search, CancellationToken cancellationToken);
     }
 }

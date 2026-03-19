@@ -4,5 +4,5 @@ using MediatR;
 
 namespace DiplomWebBack.Application.Usecases.Query.Tags
 {
-    public record GetPaginatedTagsQuery(int PageSize, int PageNumber): IRequest<PaginatedList<TagResponseDto>>;
+    public record GetPaginatedTagsQuery(int PageSize, int PageNumber, string Search): IRequest<PaginatedList<TagResponseDto>>;
 }

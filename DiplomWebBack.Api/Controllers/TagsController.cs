@@ -30,10 +30,11 @@ namespace DiplomWebBack.Api.Controllers
         /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult<PaginatedList<TagResponseDto>>> GetPaginatedTagsAsync([FromQuery] int pageNumber = 1, int pageSize = 10,
+            string search = "",
             CancellationToken cancellationToken = default)
         {
             var result = await _mediator.Send(
-                new GetPaginatedTagsQuery(pageSize, pageNumber),
+                new GetPaginatedTagsQuery(pageSize, pageNumber, search),
                 cancellationToken);
 
             return Ok(result);

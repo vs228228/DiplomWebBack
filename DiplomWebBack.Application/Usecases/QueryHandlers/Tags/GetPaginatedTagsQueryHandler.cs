@@ -20,7 +20,7 @@ namespace DiplomWebBack.Application.Usecases.QueryHandlers.Tags
             GetPaginatedTagsQuery request,
             CancellationToken cancellationToken)
         {
-            var tags = await _repository.GetAllAsync(request.PageSize, request.PageNumber, cancellationToken);
+            var tags = await _repository.GetAllAsync(request.PageSize, request.PageNumber, request.Search, cancellationToken);
 
             return tags.Adapt<PaginatedList<TagResponseDto>>();
         }

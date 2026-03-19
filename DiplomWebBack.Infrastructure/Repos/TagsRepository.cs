@@ -3,6 +3,7 @@ using DiplomWebBack.DomainRepos.Repos;
 using DiplomWebBack.Infrastructure.Context;
 using DiplomWebBack.Infrastructure.Extensions.ReposExtensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DiplomWebBack.Infrastructure.Repos
 {
@@ -12,10 +13,11 @@ namespace DiplomWebBack.Infrastructure.Repos
         {
         }
 
-        public async Task<PaginatedList<Tag>> GetAllAsync(int pageSize, int pageNumber, CancellationToken cancellationToken)
+        public async Task<PaginatedList<Tag>> GetAllAsync(int pageSize, int pageNumber, string search, CancellationToken cancellationToken)
         {
             var tags = await _context.Tags
                 .TrackChanges(false)
+                .OptionalWhere(when: !string.IsNullOrWhiteSpace(search), t => t.Title.ToLower().Contains(search.ToLower()))
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync(cancellationToken);
