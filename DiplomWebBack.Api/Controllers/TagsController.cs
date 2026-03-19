@@ -5,10 +5,12 @@ using DiplomWebBack.Application.Usecases.Query;
 using DiplomWebBack.Application.Usecases.Query.Tags;
 using DiplomWebBack.Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DiplomWebBack.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class TagsController : ControllerBase
@@ -42,6 +44,7 @@ namespace DiplomWebBack.Api.Controllers
         /// <param name="id"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        
         [HttpGet("{id}")]
         public async Task<ActionResult<TagResponseDto>> GetTagByIdAsync(
             [FromRoute] Guid id,
@@ -62,7 +65,7 @@ namespace DiplomWebBack.Api.Controllers
         /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<Guid>> AddTagAsync(
-            [FromQuery] string Title,
+            [FromBody] string Title,
             CancellationToken cancellationToken = default)
         {
             var result = await _mediator.Send(
