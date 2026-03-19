@@ -1,4 +1,5 @@
-﻿using DiplomWebBack.Application.DTOs.Tags.Responses;
+﻿using DiplomWebBack.Application.DTOs.Tags.Requests;
+using DiplomWebBack.Application.DTOs.Tags.Responses;
 using DiplomWebBack.Application.Usecases.Command;
 using DiplomWebBack.Application.Usecases.Command.Tags;
 using DiplomWebBack.Application.Usecases.Query;
@@ -65,11 +66,11 @@ namespace DiplomWebBack.Api.Controllers
         /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<Guid>> AddTagAsync(
-            [FromBody] string Title,
+            [FromBody] AddTagRequest request,
             CancellationToken cancellationToken = default)
         {
             var result = await _mediator.Send(
-                new AddTagCommand(Title),
+                new AddTagCommand(request.Title),
                 cancellationToken);
 
             return Ok(result);

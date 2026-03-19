@@ -1,4 +1,4 @@
-﻿using DiplomWebBack.Application.DTOs.Tags.Requests;
+﻿using DiplomWebBack.Application.DTOs.Auth.Request;
 using DiplomWebBack.Application.DTOs.Tags.Responses;
 using MediatR;
 
