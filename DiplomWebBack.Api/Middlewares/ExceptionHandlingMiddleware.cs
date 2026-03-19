@@ -47,11 +47,11 @@ namespace DiplomWebBack.Api.Middlewares
         {
             return statusCode switch
             {
-                (int)HttpStatusCode.NotFound => new { StatusCode = statusCode, Message = ex.Message },
-                (int)HttpStatusCode.Unauthorized => new { StatusCode = statusCode, Message = ex.Message },
-                (int)HttpStatusCode.BadRequest => new { StatusCode = statusCode, Message = ex.Message },
-                (int)HttpStatusCode.Forbidden => new {StatusCode = statusCode, Message = ex.Message },
-                _ => new { StatusCode = statusCode, Message = "Произошла ошибка в обработке запроса", Details = ex.Message }
+                (int)HttpStatusCode.NotFound => new { statusCode = statusCode, message = ex.Message },
+                (int)HttpStatusCode.Unauthorized => new { statusCode = statusCode, message = ex.Message },
+                (int)HttpStatusCode.BadRequest => new { statusCode = statusCode, message = ex.Message },
+                (int)HttpStatusCode.Forbidden => new {statusCode = statusCode, message = ex.Message },
+                _ => new { statusCode = statusCode, message = ex.Message}
             };
         }
     }
