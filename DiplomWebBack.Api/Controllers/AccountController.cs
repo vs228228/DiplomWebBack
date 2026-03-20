@@ -19,7 +19,7 @@ namespace DiplomWebBack.Api.Controllers
         }
 
         /// <summary>
-        /// Вернёт пару токенов + время жизни рефреша. Не работает до конца
+        /// Вернёт пару токенов + время жизни рефреша
         /// </summary>
         /// <param name="dto"></param>
         /// <param name="cancellationToken"></param>

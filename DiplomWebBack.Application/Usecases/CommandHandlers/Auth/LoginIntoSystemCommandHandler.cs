@@ -24,7 +24,7 @@ namespace DiplomWebBack.Application.Usecases.CommandHandlers.Auth
 
         public async Task<TokensResponseDto> Handle(LoginIntoSystemCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByEmailAsync(request.request.Login, cancellationToken);
+            var user = await _userRepository.GetByEmailAsync(request.request.Email, cancellationToken);
 
             if(user is null)
             {
