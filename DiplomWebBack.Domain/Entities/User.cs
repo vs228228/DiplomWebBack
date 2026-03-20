@@ -1,4 +1,5 @@
-﻿using DiplomWebBack.Domain.Enums;
+﻿using DiplomWebBack.Domain.Entities.m2m;
+using DiplomWebBack.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,9 @@ namespace DiplomWebBack.Domain.Entities
         public DateTimeOffset? RefreshTokenExpiryTime { get; set; }
         public UserRole Role { get; set; } = UserRole.Employee;
         public string? Avatar { get; set; }
+
+        public ICollection<UserToProject> UserToProjects { get; set; } = new List<UserToProject>();
+
         public bool IsActive { get; set; }
         public bool IsDelete { get; set; }
     }

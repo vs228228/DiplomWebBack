@@ -18,7 +18,6 @@
   <ItemGroup>
     <Folder Include="DTOs\Auth\Response\" />
     <Folder Include="DTOs\UserActivator\Request\" />
-    <Folder Include="DTOs\User\Request\" />
   </ItemGroup>
 
 </Project>

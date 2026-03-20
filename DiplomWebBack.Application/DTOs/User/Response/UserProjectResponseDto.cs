@@ -1,0 +1,13 @@
+﻿using DiplomWebBack.Domain.Enums;
+
+namespace DiplomWebBack.Application.DTOs.User.Response
+{
+    public class UserProjectResponseDto
+    {
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public string Patronymic {  get; set; }
+        public string Email { get; set; }
+        public ProjectRole Role { get; set; }
+    }
+}
