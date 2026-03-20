@@ -32,6 +32,11 @@ namespace DiplomWebBack.Application.Usecases.CommandHandlers.UserActivator
 
             var user = await _userRepository.GetByIdAsync(request.UserId, cancellationToken, true, false, true);
 
+            if (user is null)
+            {
+                throw new NotFoundException("Пользователь для активации не найден");
+            }
+
             user.IsActive = true;
 
             await _userRepository.UpdateAsync(user);
