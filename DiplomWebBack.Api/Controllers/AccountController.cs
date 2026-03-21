@@ -71,5 +71,19 @@ namespace DiplomWebBack.Api.Controllers
         {
             return Ok();
         }
+         
+        /// <summary>
+        /// Обновить accessToken
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpPost("refreshToken")]
+        public async Task<ActionResult<string>> RefreshTokenAsync([FromBody] RefreshTokenRequestDto dto, CancellationToken cancellationToken)
+        {
+            var accessToken = await _mediator.Send(new RefreshTokenCommand() { Dto = dto }, cancellationToken);
+
+            return Ok(accessToken);
+        }
     }
 }
