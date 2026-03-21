@@ -51,11 +51,28 @@ namespace DiplomWebBack.Infrastructure.Repos
                 .FirstOrDefaultAsync(t => t.Title == name, cancellationToken);
         }
 
-    public async Task<List<Tag>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken)
+        public async Task<List<Tag>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken, bool trackChanges = false)
         {
             return await _context.Tags
+                .TrackChanges(trackChanges)
                 .Where(p => ids.Contains(p.Id))
                 .ToListAsync(cancellationToken);
+        }
+
+        /* public new async Task UpdateAsync(Tag tag, CancellationToken cancellationToken = default)
+         {
+
+             _context.Tags.Update(tag);
+
+             await _context.SaveChangesAsync(cancellationToken);
+         }*/
+
+        public async Task RemoveProjectTagsAsync(Guid projectId)
+        {
+            var existing = _context.TagsToProjects.Where(x => x.ProjectId == projectId);
+            _context.TagsToProjects.RemoveRange(existing);
+
+            await _context.SaveChangesAsync();
         }
     }
 }

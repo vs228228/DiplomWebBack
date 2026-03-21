@@ -5,6 +5,7 @@ using DiplomWebBack.Domain.Repos;
 using DiplomWebBack.Infrastructure.Context;
 using DiplomWebBack.Infrastructure.Extensions.ReposExtensions;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace DiplomWebBack.Infrastructure.Repos
 {
@@ -23,7 +24,8 @@ namespace DiplomWebBack.Infrastructure.Repos
                 .AsNoTracking()
                 .Include(p => p.UserToProjects)
                     .ThenInclude(up => up.User)
-                .Include(p => p.Tags)
+                .Include(p => p.ProjectTags)
+                    .ThenInclude(p => p.Tag)
                 .Include(p => p.CreatedBy)
                 .OrderBy(p => p.CreatedAt);
 
@@ -78,20 +80,29 @@ namespace DiplomWebBack.Infrastructure.Repos
             return await _dbContext.Project
             .TrackChanges(model.TrackChanges)
             .Where(p => p.Id == model.Id)
-            .Include(p => p.UserToProjects)
-                .ThenInclude(up => up.User)
-            .Include(p => p.Tags)
-            .Include(p => p.CreatedBy)
+            .IncludeTags(model.IncludeTags)
+            .IncludeEmployees(model.IncludeEmployee)
+            .IncludeCreator(model.IncludeCreatedBy)
             .FirstOrDefaultAsync(cancellationToken); 
         }
 
         public async Task<ICollection<Tag>> GetTagsAsync(Guid projectId, CancellationToken cancellationToken)
         {
+            return await _dbContext.TagsToProjects
+                .AsNoTracking()
+                .Where(tp => tp.ProjectId == projectId)
+                .Select(tp => tp.Tag)
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<bool> IsExistByConditionAsync(
+            Expression<Func<Project, bool>> predicate,
+            CancellationToken cancellationToken = default)
+        {
+
             return await _dbContext.Project
                 .AsNoTracking()
-                .Where(p => p.Id == projectId)
-                .SelectMany(p => p.Tags)
-                .ToListAsync(cancellationToken);
+                .AnyAsync(predicate, cancellationToken);
         }
     }
 }

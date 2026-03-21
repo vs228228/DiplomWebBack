@@ -1,4 +1,5 @@
 ﻿using DiplomWebBack.Domain.Entities;
+using DiplomWebBack.Domain.Entities.m2m;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -25,12 +26,11 @@ namespace DiplomWebBack.Infrastructure.Configs
                 .HasForeignKey(p => p.CreatedById)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasMany(p => p.Tags)
-                .WithMany();
-
             builder.HasMany(p => p.UserToProjects)
                 .WithOne(utp => utp.Project)
                 .HasForeignKey(utp => utp.ProjectId);
+
+            
         }
     }
 }

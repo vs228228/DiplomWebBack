@@ -17,5 +17,6 @@ namespace DiplomWebBack.Application.DTOs.Project.Response
         public ICollection<Tag> Tags { get; set; } = new List<Tag>();
 
         public ICollection<UserProjectResponseDto> Users { get; set; } = new List<UserProjectResponseDto>();
+        public bool CanEdit { get; set; }
     }
 }

@@ -11,6 +11,7 @@ namespace DiplomWebBack.Application.MapRules
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<UserToProject, UserProjectResponseDto>()
+                .Map(dest => dest.Id, src => src.UserId)
                 .Map(dest => dest.ProjectRole, src => src.Role)
                 .Map(dest => dest.JoinedAt, src => src.JoinedAt)
                 .Map(dest => dest.Avatar, src => src.User.Avatar)
@@ -20,9 +21,14 @@ namespace DiplomWebBack.Application.MapRules
                 .Map(dest => dest.Surname, src => src.User.Surname)
                 .Map(dest => dest.Position, src => src.User.Position);
 
+            config.NewConfig<TagToProject, Tag>()
+                .Map(dest => dest.Id, src => src.TagId)
+                .Map(dest => dest.Title, src => src.Tag.Title);
+
             config.NewConfig<Project, ProjectResponseDto>()
                 .Map(dest => dest.CreatedBy, src => src.CreatedBy)
-                .Map(dest => dest.Users, src => src.UserToProjects);
+                .Map(dest => dest.Users, src => src.UserToProjects)
+                .Map(dest => dest.Tags, src => src.ProjectTags);
         }
 
 

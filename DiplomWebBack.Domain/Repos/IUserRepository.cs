@@ -15,5 +15,7 @@ namespace DiplomWebBack.Domain.Repos
         Task<bool> AreAllUsersExistAsync(
            IEnumerable<Guid> userIds,
            CancellationToken cancellationToken = default);
+
+        Task RemoveUserToProjectAsync(Guid projectId);
     }
 }

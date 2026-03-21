@@ -8,7 +8,8 @@ namespace DiplomWebBack.Application.Services
     {
         public static IServiceCollection RegisterAppService(this IServiceCollection services)
         {
-            services.AddScoped<IProjectVereficationService, ProjectVereficationService>();
+            services.AddScoped<IProjectVerificationService, ProjectVerificationService>();
+            services.AddScoped<IUserVerificationService, UserVerificationService>();
 
             return services;
         }

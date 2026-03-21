@@ -14,7 +14,7 @@ namespace DiplomWebBack.Domain.Entities
         public Guid CreatedById { get; set; }
         public User CreatedBy { get; set; }
 
-        public ICollection<Tag> Tags { get; set; } = new List<Tag>();
+        public ICollection<TagToProject> ProjectTags { get; set; } = new List<TagToProject>();
 
         public ICollection<UserToProject> UserToProjects { get; set; } = new List<UserToProject>();
     }

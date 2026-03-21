@@ -3,6 +3,6 @@ using MediatR;
 
 namespace DiplomWebBack.Application.Usecases.Command.Projects
 {
-    public record UpdateProjectTagsCommand(UpdateProjectTagsRequestDto Dto, Guid ProjectId, Guid UserId) : IRequest;
+    public record UpdateProjectTagsCommand(UpdateProjectTagsRequestDto Dto, Guid ProjectId, Guid UserId) : IRequest<Unit>;
 
 }

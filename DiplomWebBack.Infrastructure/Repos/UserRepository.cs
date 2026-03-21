@@ -106,5 +106,13 @@ namespace DiplomWebBack.Infrastructure.Repos
 
             return count == ids.Count;
         }
+
+        public async Task RemoveUserToProjectAsync(Guid projectId)
+        {
+            var existing = _context.UserToProject.Where(x => x.ProjectId == projectId);
+            _context.UserToProject.RemoveRange(existing);
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -12,11 +12,13 @@ namespace DiplomWebBack.Infrastructure.Configs.m2m
 
             builder.HasOne(utp => utp.User)
                 .WithMany(u => u.UserToProjects)
-                .HasForeignKey(utp => utp.UserId);
+                .HasForeignKey(utp => utp.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(utp => utp.Project)
                 .WithMany(p => p.UserToProjects)
-                .HasForeignKey(utp => utp.ProjectId);
+                .HasForeignKey(utp => utp.ProjectId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Property(utp => utp.Role)
                 .IsRequired();

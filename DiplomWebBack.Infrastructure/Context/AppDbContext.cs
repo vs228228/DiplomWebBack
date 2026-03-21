@@ -16,9 +16,11 @@ public sealed class AppDbContext : DbContext
     public DbSet<UserActivator> Activators => Set<UserActivator>();
     public DbSet<Project> Project => Set<Project>();
     public DbSet<UserToProject> UserToProject => Set<UserToProject>();
+    public DbSet<TagToProject> TagsToProjects => Set<TagToProject>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfigurationsFromAssembly(

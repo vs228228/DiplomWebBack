@@ -4,6 +4,7 @@ namespace DiplomWebBack.Application.DTOs.User.Response
 {
     public class UserProjectResponseDto
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Patronymic {  get; set; }

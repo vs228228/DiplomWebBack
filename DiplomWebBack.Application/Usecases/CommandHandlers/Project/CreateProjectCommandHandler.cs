@@ -64,16 +64,23 @@ namespace DiplomWebBack.Application.Usecases.CommandHandlers.Project
                 });
             }
 
+            
+
             var project = new Domain.Entities.Project()
             {
                 CreatedAt = DateTime.UtcNow,
                 CreatedById = user.Id,
                 Description = request.Project.Description,
                 Title = request.Project.Title,
-                Tags = tags,
+                ProjectTags = new List<TagToProject>(),
                 UserToProjects = userToProjects,
 
             };
+
+            foreach (var tag in request.Project.Tags)
+            {
+                project.ProjectTags.Add(new TagToProject() { TagId = tag });
+            }
 
             await _projectRepository.AddAsync(project, cancellationToken);
 
