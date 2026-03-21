@@ -3,5 +3,5 @@ using MediatR;
 
 namespace DiplomWebBack.Application.Usecases.Query.Projects
 {
-    public record GetProjectTagsQuery(Guid projectId, Guid userId) : IRequest<IEnumerable<Tag>>;
+    public record GetProjectTagsQuery(Guid ProjectId, Guid UserId) : IRequest<IEnumerable<Tag>>;
 }

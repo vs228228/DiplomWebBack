@@ -3,6 +3,7 @@ using DiplomWebBack.Domain.CustomExceptions;
 using DiplomWebBack.Domain.Entities;
 using DiplomWebBack.Domain.GetByIdModels;
 using DiplomWebBack.Domain.Repos;
+using System.Reflection;
 
 namespace DiplomWebBack.Application.Services.Implementation
 {
