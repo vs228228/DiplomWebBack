@@ -1,4 +1,5 @@
 ﻿using DiplomWebBack.Api.Middlewares;
+using DiplomWebBack.Application.Services;
 using DiplomWebBack.Application.Usecases.Command.Tags;
 using DiplomWebBack.Infrastructure.Context;
 using DiplomWebBack.Infrastructure.Extensions;
@@ -27,6 +28,7 @@ namespace DiplomWebBack.Api
 
             builder.Services.AddTokenManager(builder.Configuration);
             builder.Services.AddPasswordHasher();
+            builder.Services.RegisterAppService();
             builder.Services.AddSingleton(TypeAdapterConfig.GlobalSettings);
             builder.Services.AddScoped<IMapper, ServiceMapper>();
 

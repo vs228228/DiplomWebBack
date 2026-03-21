@@ -24,15 +24,15 @@ public class ProjectController : ControllerBase
     /// <summary>
     /// Получение проекта
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="projectId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpGet("{id}")]
-    public async Task<ActionResult<ProjectResponseDto>> GetProjectByIdAsync([FromRoute] Guid id, CancellationToken cancellationToken)
+    [HttpGet("{projectId}")]
+    public async Task<ActionResult<ProjectResponseDto>> GetProjectByIdAsync([FromRoute] Guid projectId, CancellationToken cancellationToken)
     {
         var initiatorId = HttpContext.GetCurrentUserId();
 
-        var project = await _mediator.Send(new GetProjectByIdQuery(id, initiatorId));
+        var project = await _mediator.Send(new GetProjectByIdQuery(projectId, initiatorId));
 
         return Ok(project);
     }
@@ -73,15 +73,15 @@ public class ProjectController : ControllerBase
     /// <summary>
     /// Удаление проекта
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="projectId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteProjectAsync([FromRoute] Guid id, CancellationToken cancellationToken)
+    [HttpDelete("{projectId}")]
+    public async Task<ActionResult> DeleteProjectAsync([FromRoute] Guid projectId, CancellationToken cancellationToken)
     {
         var userId = HttpContext.GetCurrentUserId();
 
-        await _mediator.Send(new DeleteProjectCommand(id, userId), cancellationToken);
+        await _mediator.Send(new DeleteProjectCommand(projectId, userId), cancellationToken);
         return NoContent();
     }
 

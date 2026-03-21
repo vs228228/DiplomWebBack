@@ -12,7 +12,7 @@ namespace DiplomWebBack.Application.DTOs.Project.Response
 
         public DateTime CreatedAt { get; set; }
 
-        public UserProjectResponseDto CreatedBy { get; set; }
+        public UserProfileDto CreatedBy { get; set; }
 
         public ICollection<Tag> Tags { get; set; } = new List<Tag>();
 

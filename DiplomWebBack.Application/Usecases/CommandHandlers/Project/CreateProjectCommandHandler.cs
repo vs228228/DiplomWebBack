@@ -1,6 +1,7 @@
 ﻿using DiplomWebBack.Application.Usecases.Command.Projects;
 using DiplomWebBack.Domain.CustomExceptions;
 using DiplomWebBack.Domain.Entities;
+using DiplomWebBack.Domain.Entities.m2m;
 using DiplomWebBack.Domain.Repos;
 using DiplomWebBack.DomainRepos.Repos;
 using MediatR;
