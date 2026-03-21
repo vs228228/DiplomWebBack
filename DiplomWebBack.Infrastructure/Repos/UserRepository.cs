@@ -44,5 +44,10 @@ namespace DiplomWebBack.Infrastructure.Repos
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<User>> GetAllAsync(CancellationToken cancellationToken = default)
+        {
+            return await _context.User.Where(u => u.IsDelete == false && u.IsActive == true).ToListAsync(cancellationToken);
+        }
     }
 }

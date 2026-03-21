@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DiplomWebBack.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
@@ -24,7 +25,6 @@ namespace DiplomWebBack.Api.Controllers
         /// <param name="userId"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpGet("{userId}/profile")]
         public async Task<ActionResult<UserProfileDto>> GetUserProfileDto(Guid userId, CancellationToken cancellationToken)
         {
@@ -36,8 +36,12 @@ namespace DiplomWebBack.Api.Controllers
 
             return Ok(user);
         }
-
-        [Authorize]
+        
+        /// <summary>
+        /// Получить текущего юзера
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpGet("me")]
         public async Task<ActionResult<UserProfileDto>> GetMeAsync(CancellationToken cancellationToken)
         {
@@ -46,6 +50,19 @@ namespace DiplomWebBack.Api.Controllers
             var user = await _mediator.Send(new GetCurrentUserQuery(userId), cancellationToken);
 
             return Ok(user);
+        }
+
+        /// <summary>
+        /// Возвращает всех не удалённых и активированных юзеров
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("withoutPagination")]
+        public async Task<ActionResult<IEnumerable<UserProfileDto>>> GetAllUsersWithoutPagination(CancellationToken cancellationToken)
+        {
+            var users = await _mediator.Send(new GetAllUsersWithoutPaginationQuery(), cancellationToken);
+
+            return Ok(users);
         }
     }
 }
