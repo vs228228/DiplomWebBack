@@ -1,10 +1,12 @@
-﻿using DiplomWebBack.Application.DTOs.User.Response;
+﻿using DiplomWebBack.Application.DTOs.Project.Response;
+using DiplomWebBack.Application.DTOs.User.Response;
+using DiplomWebBack.Domain.Entities;
 using DiplomWebBack.Domain.Entities.m2m;
 using Mapster;
 
 namespace DiplomWebBack.Application.MapRules
 {
-    public class UserProjectResponseDtoRules
+    public class UserProjectResponseDtoRules : IRegister
     {
         public void Register(TypeAdapterConfig config)
         {
@@ -17,6 +19,12 @@ namespace DiplomWebBack.Application.MapRules
                 .Map(dest => dest.Patronymic, src => src.User.Patronymic)
                 .Map(dest => dest.Surname, src => src.User.Surname)
                 .Map(dest => dest.Position, src => src.User.Position);
+
+            config.NewConfig<Project, ProjectResponseDto>()
+                .Map(dest => dest.CreatedBy, src => src.CreatedBy)
+                .Map(dest => dest.Users, src => src.UserToProjects);
         }
+
+
     }
 }

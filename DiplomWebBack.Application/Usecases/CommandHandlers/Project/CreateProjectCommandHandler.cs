@@ -2,6 +2,7 @@
 using DiplomWebBack.Domain.CustomExceptions;
 using DiplomWebBack.Domain.Entities;
 using DiplomWebBack.Domain.Entities.m2m;
+using DiplomWebBack.Domain.Enums;
 using DiplomWebBack.Domain.Repos;
 using DiplomWebBack.DomainRepos.Repos;
 using MediatR;
@@ -30,7 +31,38 @@ namespace DiplomWebBack.Application.Usecases.CommandHandlers.Project
                 throw new BadRequestException("Инициатор не найден");
             }
 
+            List<Guid> usersIds = new List<Guid>();
+
+            foreach(var projectUser in request.Project.Users)
+            {
+                usersIds.Add(projectUser.Id);
+            }
+
+            if(!await _userRepository.AreAllUsersExistAsync(usersIds))
+            {
+                throw new BadRequestException("Не все пользователи существуют");
+            }
+
             var tags = await _tagsRepository.GetByIdsAsync(request.Project.Tags, cancellationToken);
+
+            var userToProjects = request.Project.Users
+                .Select(u => new UserToProject
+                {
+                    UserId = u.Id,
+                    JoinedAt = DateTime.UtcNow,
+                    Role = u.Role
+                })
+                .ToList();
+
+            if (!userToProjects.Any(u => u.UserId == user.Id))
+            {
+                userToProjects.Add(new UserToProject
+                {
+                    UserId = user.Id,
+                    JoinedAt = DateTime.UtcNow,
+                    Role = ProjectRole.Manager
+                });
+            }
 
             var project = new Domain.Entities.Project()
             {
@@ -39,6 +71,7 @@ namespace DiplomWebBack.Application.Usecases.CommandHandlers.Project
                 Description = request.Project.Description,
                 Title = request.Project.Title,
                 Tags = tags,
+                UserToProjects = userToProjects,
 
             };
 

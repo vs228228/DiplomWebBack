@@ -93,5 +93,18 @@ namespace DiplomWebBack.Infrastructure.Repos
                 }
             };
         }
+
+        public async Task<bool> AreAllUsersExistAsync(
+            IEnumerable<Guid> userIds,
+            CancellationToken cancellationToken = default)
+        {
+            var ids = userIds.Distinct().ToList();
+
+            var count = await _context.User
+                .Where(u => ids.Contains(u.Id) && !u.IsDelete && u.IsActive)
+                .CountAsync(cancellationToken);
+
+            return count == ids.Count;
+        }
     }
 }

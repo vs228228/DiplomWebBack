@@ -11,5 +11,9 @@ namespace DiplomWebBack.Domain.Repos
             int pageNumber,
             int pageSize,
             CancellationToken cancellationToken = default);
+
+        Task<bool> AreAllUsersExistAsync(
+           IEnumerable<Guid> userIds,
+           CancellationToken cancellationToken = default);
     }
 }

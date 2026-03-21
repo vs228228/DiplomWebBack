@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace DiplomWebBack.Application.MapRules
 {
-    public class UserActivatorRule
+    public class UserActivatorRule : IRegister
     {
         public void Register(TypeAdapterConfig config)
         {

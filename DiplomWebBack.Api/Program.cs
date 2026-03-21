@@ -1,4 +1,5 @@
 ﻿using DiplomWebBack.Api.Middlewares;
+using DiplomWebBack.Application.MapRules;
 using DiplomWebBack.Application.Services;
 using DiplomWebBack.Application.Usecases.Command.Tags;
 using DiplomWebBack.Infrastructure.Context;
@@ -31,6 +32,10 @@ namespace DiplomWebBack.Api
             builder.Services.RegisterAppService();
             builder.Services.AddSingleton(TypeAdapterConfig.GlobalSettings);
             builder.Services.AddScoped<IMapper, ServiceMapper>();
+
+            var config = TypeAdapterConfig.GlobalSettings;
+
+            new UserProjectResponseDtoRules().Register(config);
 
             builder.Services.AddControllers();
 

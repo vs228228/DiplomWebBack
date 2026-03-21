@@ -1,4 +1,5 @@
-﻿using DiplomWebBack.Domain.Entities;
+﻿using DiplomWebBack.Application.DTOs.User.Request;
+using DiplomWebBack.Domain.Entities;
 
 namespace DiplomWebBack.Application.DTOs.Project.Request
 {
@@ -7,5 +8,6 @@ namespace DiplomWebBack.Application.DTOs.Project.Request
         public string Title { get; set; }
         public string Description { get; set; }
         public IEnumerable<Guid> Tags { get; set; }
+        public IEnumerable<UserProjectCreateRequestDto> Users { get; set; }
     }
 }
