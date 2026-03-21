@@ -92,7 +92,7 @@ namespace DiplomWebBack.Api
 
             var app = builder.Build();
 
-         //   app.UseMiddleware<ExceptionHandlingMiddleware>();
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             using (var scope = app.Services.CreateScope())
             {
