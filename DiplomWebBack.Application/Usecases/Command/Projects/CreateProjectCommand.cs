@@ -4,5 +4,5 @@ using MediatR;
 
 namespace DiplomWebBack.Application.Usecases.Command.Projects
 {
-    public record CreateProjectCommand(ProjectCreateRequestDto Project, Guid UserId) : IRequest<Project>;
+    public record CreateProjectCommand(ProjectCreateRequestDto Project, Guid UserId) : IRequest<Guid>;
 }

@@ -12,6 +12,7 @@ namespace DiplomWebBack.Infrastructure.Extensions
             services.AddScoped<ITagsRepository, TagsRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserActivatorRepository, UserActivatorRepository>();
+            services.AddScoped<IProjectRepository, ProjectRepository>();
 
             return services;
         }

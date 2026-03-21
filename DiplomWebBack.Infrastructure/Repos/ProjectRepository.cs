@@ -19,7 +19,7 @@ namespace DiplomWebBack.Infrastructure.Repos
 
         public async Task<PaginatedList<Project>> GetAllPagedAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
-            var query = _dbContext.Projects
+            var query = _dbContext.Project
                 .AsNoTracking()
                 .Include(p => p.UserToProjects)
                     .ThenInclude(up => up.User)
@@ -48,7 +48,7 @@ namespace DiplomWebBack.Infrastructure.Repos
 
         public async Task<ICollection<User>> GetUsersAsync(Guid projectId, CancellationToken cancellationToken)
         {
-            return await _dbContext.UserToProjects
+            return await _dbContext.UserToProject
                 .AsNoTracking()
                 .Where(up => up.ProjectId == projectId)
                 .Select(up => up.User)
@@ -57,7 +57,7 @@ namespace DiplomWebBack.Infrastructure.Repos
 
         public async Task<ICollection<User>> GetEmployeesAsync(Guid projectId, CancellationToken cancellationToken)
         {
-            return await _dbContext.UserToProjects
+            return await _dbContext.UserToProject
                 .AsNoTracking()
                 .Where(up => up.ProjectId == projectId && up.Role == ProjectRole.Employee)
                 .Select(up => up.User)
@@ -66,7 +66,7 @@ namespace DiplomWebBack.Infrastructure.Repos
 
         public async Task<ICollection<User>> GetManagersAsync(Guid projectId, CancellationToken cancellationToken)
         {
-            return await _dbContext.UserToProjects
+            return await _dbContext.UserToProject
                 .AsNoTracking()
                 .Where(up => up.ProjectId == projectId && up.Role == ProjectRole.Manager)
                 .Select(up => up.User)
@@ -75,7 +75,7 @@ namespace DiplomWebBack.Infrastructure.Repos
 
         public async Task<Project> GetProjectByIdAsync(GetProjectByIdModel model, CancellationToken cancellationToken)
         {
-            return await _dbContext.Projects
+            return await _dbContext.Project
             .TrackChanges(model.TrackChanges)
             .Where(p => p.Id == model.Id)
             .Include(p => p.UserToProjects)
@@ -87,7 +87,7 @@ namespace DiplomWebBack.Infrastructure.Repos
 
         public async Task<ICollection<Tag>> GetTagsAsync(Guid projectId, CancellationToken cancellationToken)
         {
-            return await _dbContext.Projects
+            return await _dbContext.Project
                 .AsNoTracking()
                 .Where(p => p.Id == projectId)
                 .SelectMany(p => p.Tags)

@@ -14,8 +14,8 @@ public sealed class AppDbContext : DbContext
     public DbSet<Tag> Tags => Set<Tag>();
     public DbSet<User> User => Set<User>();
     public DbSet<UserActivator> Activators => Set<UserActivator>();
-    public DbSet<Project> Projects => Set<Project>();
-    public DbSet<UserToProject> UserToProjects => Set<UserToProject>();
+    public DbSet<Project> Project => Set<Project>();
+    public DbSet<UserToProject> UserToProject => Set<UserToProject>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

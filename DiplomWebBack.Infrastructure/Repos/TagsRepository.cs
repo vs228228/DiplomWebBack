@@ -50,5 +50,12 @@ namespace DiplomWebBack.Infrastructure.Repos
                 .TrackChanges(trackChanges)
                 .FirstOrDefaultAsync(t => t.Title == name, cancellationToken);
         }
+
+    public async Task<List<Tag>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken)
+        {
+            return await _context.Tags
+                .Where(p => ids.Contains(p.Id))
+                .ToListAsync(cancellationToken);
+        }
     }
 }
