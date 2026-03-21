@@ -45,9 +45,53 @@ namespace DiplomWebBack.Infrastructure.Repos
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<User>> GetAllAsync(CancellationToken cancellationToken = default)
+        public async Task<PaginatedList<User>> GetAllAsync(
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken = default)
         {
-            return await _context.User.Where(u => u.IsDelete == false && u.IsActive == true).ToListAsync(cancellationToken);
+            var query = _context.User
+                .Where(u => !u.IsDelete && u.IsActive);
+
+            var totalCount = await query.CountAsync(cancellationToken);
+
+            List<User> users;
+
+            if (pageNumber == -1)
+            {
+                users = await query.ToListAsync(cancellationToken);
+
+                return new PaginatedList<User>
+                {
+                    List = users,
+                    Meta = new MetaForPaginatedList
+                    {
+                        PageNumber = 1,
+                        PageSize = totalCount,
+                        TotalCount = totalCount,
+                        TotalPageCount = 1
+                    }
+                };
+            }
+
+            users = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
+            var totalPageCount = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            return new PaginatedList<User>
+            {
+                List = users,
+                Meta = new MetaForPaginatedList
+                {
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
+                    TotalCount = totalCount,
+                    TotalPageCount = totalPageCount
+                }
+            };
         }
     }
 }

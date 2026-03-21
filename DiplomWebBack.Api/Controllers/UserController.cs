@@ -1,6 +1,8 @@
 ﻿using DiplomWebBack.Api.Extensions;
+using DiplomWebBack.Application.DTOs.User.Request;
 using DiplomWebBack.Application.DTOs.User.Response;
 using DiplomWebBack.Application.Usecases.Query.User;
+using DiplomWebBack.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -57,10 +59,10 @@ namespace DiplomWebBack.Api.Controllers
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [HttpGet("withoutPagination")]
-        public async Task<ActionResult<IEnumerable<UserProfileDto>>> GetAllUsersWithoutPagination(CancellationToken cancellationToken)
+        [HttpGet]
+        public async Task<ActionResult<PaginatedList<UserProfileDto>>> GetAllUsersWithoutPagination([FromQuery] UserPaginatedRequestDto dto,CancellationToken cancellationToken)
         {
-            var users = await _mediator.Send(new GetAllUsersWithoutPaginationQuery(), cancellationToken);
+            var users = await _mediator.Send(new GetAllUsersWithoutPaginationQuery(dto), cancellationToken);
 
             return Ok(users);
         }
