@@ -40,11 +40,13 @@ namespace DiplomWebBack.Application.Usecases.CommandHandlers.Project
             var project = await _projectVerificationService.CheckIfProjectValidForUpdateAndGetAsync(model, user.Id,
                 user.Role == Domain.Enums.UserRole.Admin ? true : false, cancellationToken, trackChanges: true);
 
-            project.ProjectTags.Clear();
+            project.UserToProjects.Clear();
 
             await _userRepository.RemoveUserToProjectAsync(project.Id);
 
-            foreach (var userr in request.Dto.Users)
+            var users = request.Dto.Users.DistinctBy(u => u.Id).ToList();
+
+            foreach (var userr in users)
             {
                 project.UserToProjects.Add(new UserToProject() { JoinedAt = DateTime.UtcNow, ProjectId = project.Id, UserId =  userr.Id, Role = userr.Role});
             }

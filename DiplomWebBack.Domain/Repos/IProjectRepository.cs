@@ -1,4 +1,5 @@
 ﻿using DiplomWebBack.Domain.Entities;
+using DiplomWebBack.Domain.Entities.m2m;
 using DiplomWebBack.Domain.GetByIdModels;
 using System.Linq.Expressions;
 
@@ -8,9 +9,9 @@ namespace DiplomWebBack.Domain.Repos
     {
         Task<PaginatedList<Project>> GetAllPagedAsync(int pageNumber, int pageSize, CancellationToken cancellationToken);
 
-        Task<ICollection<User>> GetUsersAsync(Guid projectId, CancellationToken cancellationToken);
-        Task<ICollection<User>> GetEmployeesAsync(Guid projectId, CancellationToken cancellationToken);
-        Task<ICollection<User>> GetManagersAsync(Guid projectId, CancellationToken cancellationToken);
+        Task<ICollection<UserToProject>> GetUsersAsync(Guid projectId, CancellationToken cancellationToken);
+        Task<ICollection<UserToProject>> GetEmployeesAsync(Guid projectId, CancellationToken cancellationToken);
+        Task<ICollection<UserToProject>> GetManagersAsync(Guid projectId, CancellationToken cancellationToken);
         Task<Project> GetProjectByIdAsync(GetProjectByIdModel model, CancellationToken cancellationToken);
         Task<ICollection<Tag>> GetTagsAsync(Guid projectId, CancellationToken cancellationToken);
         Task<bool> IsExistByConditionAsync(

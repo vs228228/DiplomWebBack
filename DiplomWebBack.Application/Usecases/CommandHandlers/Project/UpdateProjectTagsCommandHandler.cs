@@ -48,7 +48,9 @@ namespace DiplomWebBack.Application.Usecases.CommandHandlers.Project
 
             await _tagsRepository.RemoveProjectTagsAsync(project.Id);
 
-            foreach (var tag in request.Dto.Tags)
+            var tags = request.Dto.Tags.DistinctBy(t => t).ToList();
+
+            foreach (var tag in tags)
             {
                 project.ProjectTags.Add(new TagToProject() { TagId = tag, ProjectId = project.Id });
             }

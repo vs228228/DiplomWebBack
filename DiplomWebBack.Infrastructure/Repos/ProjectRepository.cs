@@ -1,4 +1,5 @@
 ﻿using DiplomWebBack.Domain.Entities;
+using DiplomWebBack.Domain.Entities.m2m;
 using DiplomWebBack.Domain.Enums;
 using DiplomWebBack.Domain.GetByIdModels;
 using DiplomWebBack.Domain.Repos;
@@ -48,30 +49,30 @@ namespace DiplomWebBack.Infrastructure.Repos
             };
         }
 
-        public async Task<ICollection<User>> GetUsersAsync(Guid projectId, CancellationToken cancellationToken)
+        public async Task<ICollection<UserToProject>> GetUsersAsync(Guid projectId, CancellationToken cancellationToken)
         {
             return await _dbContext.UserToProject
                 .AsNoTracking()
                 .Where(up => up.ProjectId == projectId)
-                .Select(up => up.User)
+                .Include(up => up.User)
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<ICollection<User>> GetEmployeesAsync(Guid projectId, CancellationToken cancellationToken)
+        public async Task<ICollection<UserToProject>> GetEmployeesAsync(Guid projectId, CancellationToken cancellationToken)
         {
             return await _dbContext.UserToProject
                 .AsNoTracking()
                 .Where(up => up.ProjectId == projectId && up.Role == ProjectRole.Employee)
-                .Select(up => up.User)
+                .Include(up => up.User)
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<ICollection<User>> GetManagersAsync(Guid projectId, CancellationToken cancellationToken)
+        public async Task<ICollection<UserToProject>> GetManagersAsync(Guid projectId, CancellationToken cancellationToken)
         {
             return await _dbContext.UserToProject
                 .AsNoTracking()
                 .Where(up => up.ProjectId == projectId && up.Role == ProjectRole.Manager)
-                .Select(up => up.User)
+                .Include(up => up.User)
                 .ToListAsync(cancellationToken);
         }
 

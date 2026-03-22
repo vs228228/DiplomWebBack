@@ -32,7 +32,7 @@ namespace DiplomWebBack.Application.Usecases.QueryHandlers.Project
 
             var users = await _projectRepository.GetUsersAsync(request.ProjectId, cancellationToken);
 
-            return users.Adapt<IEnumerable<UserProjectResponseDto>>();
+            return users.Adapt<ICollection<UserProjectResponseDto>>();
         }
     }
 }
