@@ -8,6 +8,6 @@ namespace DiplomWebBack.Application.DTOs.Project.Request
         public string Title { get; set; }
         public string Description { get; set; }
         public IEnumerable<Guid> Tags { get; set; }
-        public IEnumerable<UserProjectCreateRequestDto> Users { get; set; }
+       /* public IEnumerable<UserProjectCreateRequestDto> Users { get; set; }*/
     }
 }

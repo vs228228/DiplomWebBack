@@ -1,9 +1,11 @@
-﻿using DiplomWebBack.Application.DTOs.Auth.Request;
+﻿using DiplomWebBack.Api.Extensions;
+using DiplomWebBack.Application.DTOs.Auth.Request;
 using DiplomWebBack.Application.DTOs.Tags.Responses;
 using DiplomWebBack.Application.Usecases.Command.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 
 namespace DiplomWebBack.Api.Controllers
 {
@@ -79,9 +81,26 @@ namespace DiplomWebBack.Api.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost("refreshToken")]
-        public async Task<ActionResult<string>> RefreshTokenAsync([FromBody] RefreshTokenRequestDto dto, CancellationToken cancellationToken)
+        public async Task<ActionResult<string>> RefreshTokenAsync(CancellationToken cancellationToken)
         {
+            var userId = HttpContext.GetCurrentUserId();
+
+            var refreshToken = HttpContext.GetRefreshToken();
+
+            var dto = new RefreshTokenRequestDto() { RefreshToken = refreshToken, UserId = userId };
+
             var accessToken = await _mediator.Send(new RefreshTokenCommand() { Dto = dto }, cancellationToken);
+
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = false, // HTTP → ОБЯЗАТЕЛЬНО false
+                SameSite = SameSiteMode.Lax, // безопасный вариант для HTTP
+                Expires = DateTimeOffset.UtcNow.AddDays(7) // подгони под refresh token
+            };
+
+            // Access token (обычно короткоживущий)
+            Response.Cookies.Append("accessToken", accessToken, cookieOptions);
 
             return Ok(accessToken);
         }

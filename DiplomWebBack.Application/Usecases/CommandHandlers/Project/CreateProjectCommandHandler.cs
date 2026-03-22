@@ -31,7 +31,7 @@ namespace DiplomWebBack.Application.Usecases.CommandHandlers.Project
                 throw new BadRequestException("Инициатор не найден");
             }
 
-            List<Guid> usersIds = new List<Guid>();
+           /* List<Guid> usersIds = new List<Guid>();
 
             foreach(var projectUser in request.Project.Users)
             {
@@ -41,11 +41,11 @@ namespace DiplomWebBack.Application.Usecases.CommandHandlers.Project
             if(!await _userRepository.AreAllUsersExistAsync(usersIds))
             {
                 throw new BadRequestException("Не все пользователи существуют");
-            }
+            }*/ // закомментил т.к. Женька то просит добавить то просит удалить, так что фиг его знает, вдруг снова понадобится
 
             var tags = await _tagsRepository.GetByIdsAsync(request.Project.Tags, cancellationToken);
 
-            var userToProjects = request.Project.Users
+            /*var userToProjects = request.Project.Users
                 .Select(u => new UserToProject
                 {
                     UserId = u.Id,
@@ -62,7 +62,7 @@ namespace DiplomWebBack.Application.Usecases.CommandHandlers.Project
                     JoinedAt = DateTime.UtcNow,
                     Role = ProjectRole.Manager
                 });
-            }
+            }*/ // такая же ситуация
 
             
 
@@ -73,7 +73,6 @@ namespace DiplomWebBack.Application.Usecases.CommandHandlers.Project
                 Description = request.Project.Description,
                 Title = request.Project.Title,
                 ProjectTags = new List<TagToProject>(),
-                UserToProjects = userToProjects,
 
             };
 

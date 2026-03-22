@@ -15,5 +15,13 @@ namespace DiplomWebBack.Api.Extensions
 
             return Guid.Parse(userIdClaim.Value);
         }
+
+        public static string GetRefreshToken(this HttpContext httpContext)
+        {
+            if (!httpContext.Request.Cookies.TryGetValue("refreshToken", out var refreshToken))
+                throw new UnauthorizedException("Refresh token not found");
+
+            return refreshToken;
+        }
     }
 }

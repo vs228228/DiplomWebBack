@@ -13,16 +13,33 @@ namespace DiplomWebBack.Infrastructure.Repos
         {
         }
 
-        public async Task<PaginatedList<Tag>> GetAllAsync(int pageSize, int pageNumber, string search, CancellationToken cancellationToken)
+        public async Task<PaginatedList<Tag>> GetAllAsync(
+            int pageSize,
+            int pageNumber,
+            string search,
+            CancellationToken cancellationToken)
         {
-            var tags = await _context.Tags
+            var query = _context.Tags
                 .TrackChanges(false)
-                .OptionalWhere(when: !string.IsNullOrWhiteSpace(search), t => t.Title.ToLower().Contains(search.ToLower()))
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync(cancellationToken);
+                .OptionalWhere(
+                    when: !string.IsNullOrWhiteSpace(search),
+                    t => t.Title.ToLower().Contains(search.ToLower()));
 
-            var totalCount = await _context.Tags.CountAsync(cancellationToken);
+            var totalCount = await query.CountAsync(cancellationToken);
+
+            List<Tag> tags;
+
+            if (pageNumber == -1)
+            {
+                tags = await query.ToListAsync(cancellationToken);
+            }
+            else
+            {
+                tags = await query
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync(cancellationToken);
+            }
 
             return new PaginatedList<Tag>
             {
@@ -32,7 +49,9 @@ namespace DiplomWebBack.Infrastructure.Repos
                     PageNumber = pageNumber,
                     PageSize = pageSize,
                     TotalCount = totalCount,
-                    TotalPageCount = (int)Math.Ceiling(totalCount / (double)pageSize)
+                    TotalPageCount = pageNumber == -1
+                        ? 1
+                        : (int)Math.Ceiling(totalCount / (double)pageSize)
                 },
             };
         }
