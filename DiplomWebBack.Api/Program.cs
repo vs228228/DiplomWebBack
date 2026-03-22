@@ -2,11 +2,15 @@
 using DiplomWebBack.Application.MapRules;
 using DiplomWebBack.Application.Services;
 using DiplomWebBack.Application.Usecases.Command.Tags;
+using DiplomWebBack.Domain.Interfaces;
 using DiplomWebBack.Infrastructure.Context;
 using DiplomWebBack.Infrastructure.Extensions;
+using DiplomWebBack.Infrastructure.Services;
+using DiplomWebBack.Infrastructure.Settings;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
@@ -89,6 +93,18 @@ namespace DiplomWebBack.Api
                         ValidateIssuerSigningKey = true
                     };
                  });*/
+
+            builder.Services.Configure<ExternalApiOptions>(
+                builder.Configuration.GetSection("ExternalApi"));
+
+            builder.Services.AddHttpClient<IExternalApiService, ExternalApiService>((sp, client) =>
+            {
+                var options = sp.GetRequiredService<IOptions<ExternalApiOptions>>().Value;
+
+                client.BaseAddress = new Uri(options.BaseUrl);
+            });
+
+            builder.Services.AddMongo(builder.Configuration);
 
             var app = builder.Build();
 

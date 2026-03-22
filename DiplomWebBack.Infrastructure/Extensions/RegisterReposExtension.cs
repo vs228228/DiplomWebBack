@@ -14,6 +14,9 @@ namespace DiplomWebBack.Infrastructure.Extensions
             services.AddScoped<IUserActivatorRepository, UserActivatorRepository>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
 
+            // mongo
+            services.AddScoped<IUserSkillsRepository, UserSkillsRepository>();
+
             return services;
         }
     }

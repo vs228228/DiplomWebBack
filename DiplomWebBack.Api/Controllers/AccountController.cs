@@ -80,14 +80,14 @@ namespace DiplomWebBack.Api.Controllers
         /// <param name="dto"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [HttpPost("refreshToken")]
+        [HttpPost("refresh-token")]
         public async Task<ActionResult<string>> RefreshTokenAsync(CancellationToken cancellationToken)
         {
-            var userId = HttpContext.GetCurrentUserId();
+            var userId = HttpContext.GetUserIdFromExpiredToken();
 
             var refreshToken = HttpContext.GetRefreshToken();
 
-            var dto = new RefreshTokenRequestDto() { RefreshToken = refreshToken, UserId = userId };
+            var dto = new RefreshTokenRequestDto() { RefreshToken = refreshToken, UserId = (Guid)userId };
 
             var accessToken = await _mediator.Send(new RefreshTokenCommand() { Dto = dto }, cancellationToken);
 

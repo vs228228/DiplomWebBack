@@ -37,7 +37,7 @@ namespace DiplomWebBack.Application.Usecases.CommandHandlers.Auth
                 throw new BadRequestException("Пользователь с таким email уже есть, однако он не подтверждён админом/менеджером");
             }
 
-            var user = new User()
+            var user = new Domain.Entities.User()
             {
                 Id = Guid.NewGuid(),
                 CreatedAt = DateTime.UtcNow,

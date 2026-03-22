@@ -35,6 +35,7 @@ namespace DiplomWebBack.Api.Middlewares
                 UnauthorizedException => (int)HttpStatusCode.Unauthorized,
                 BadRequestException => (int)HttpStatusCode.BadRequest,
                 ForbiddenException => (int)HttpStatusCode.Forbidden,
+                HttpRequestException => (int)HttpStatusCode.BadGateway,
                 _ => (int)HttpStatusCode.InternalServerError
             };
 
@@ -51,6 +52,7 @@ namespace DiplomWebBack.Api.Middlewares
                 (int)HttpStatusCode.Unauthorized => new { statusCode = statusCode, message = ex.Message },
                 (int)HttpStatusCode.BadRequest => new { statusCode = statusCode, message = ex.Message },
                 (int)HttpStatusCode.Forbidden => new {statusCode = statusCode, message = ex.Message },
+                (int)HttpStatusCode.BadGateway => new { statusCode = statusCode, message = ex.Message },
                 _ => new { statusCode = statusCode, message = ex.Message}
             };
         }

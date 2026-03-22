@@ -1,8 +1,10 @@
 ﻿using DiplomWebBack.Api.Extensions;
 using DiplomWebBack.Application.DTOs.User.Request;
 using DiplomWebBack.Application.DTOs.User.Response;
+using DiplomWebBack.Application.Usecases.Command.User;
 using DiplomWebBack.Application.Usecases.Query.User;
 using DiplomWebBack.Domain.Entities;
+using DiplomWebBack.Domain.Entities.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -65,6 +67,24 @@ namespace DiplomWebBack.Api.Controllers
             var users = await _mediator.Send(new GetAllUsersWithoutPaginationQuery(dto), cancellationToken);
 
             return Ok(users);
+        }
+
+        /// <summary>
+        /// Отправка резюме для получения скиллов
+        /// </summary>
+        /// <param name="resumeFile"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
+        [Produces("application/json")]
+        [Consumes("multipart/form-data")]
+        [HttpPost("extract-skills")]
+        public async Task<ActionResult<SkillExtractionResponse>> ExtractSkills(IFormFile resumeFile, CancellationToken ct)
+        {
+            var userId = HttpContext.GetCurrentUserId();
+
+            var result = await _mediator.Send(new ExtractSkillsCommand(resumeFile, userId), ct);
+
+            return Ok(result);
         }
     }
 }
