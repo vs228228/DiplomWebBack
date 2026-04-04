@@ -8,6 +8,7 @@ namespace DiplomWebBack.Domain.Entities.Responses
         [BsonId]
         public ObjectId Id { get; set; }
 
+        [BsonRepresentation(BsonType.String)]
         public Guid UserId { get; set; }
 
         public List<SkillItem> Skills { get; set; } = new();

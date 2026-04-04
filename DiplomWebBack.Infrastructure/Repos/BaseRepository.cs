@@ -1,11 +1,6 @@
 ﻿using DiplomWebBack.Domain.Repos;
 using DiplomWebBack.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiplomWebBack.Infrastructure.Repos
 {

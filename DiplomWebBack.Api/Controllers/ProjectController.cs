@@ -82,6 +82,7 @@ public class ProjectController : ControllerBase
         var userId = HttpContext.GetCurrentUserId();
 
         await _mediator.Send(new DeleteProjectCommand(projectId, userId), cancellationToken);
+
         return NoContent();
     }
 

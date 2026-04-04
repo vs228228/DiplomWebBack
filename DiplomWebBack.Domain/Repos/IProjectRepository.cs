@@ -17,5 +17,6 @@ namespace DiplomWebBack.Domain.Repos
         Task<bool> IsExistByConditionAsync(
              Expression<Func<Project, bool>> condition,
              CancellationToken cancellationToken);
+        Task DeleteAsync(Guid projectId, CancellationToken cancellationToken);
     }
 }

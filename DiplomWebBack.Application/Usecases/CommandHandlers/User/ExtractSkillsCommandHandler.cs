@@ -2,16 +2,10 @@
 using DiplomWebBack.Application.Services.Interfaces;
 using DiplomWebBack.Application.Usecases.Command.User;
 using DiplomWebBack.Domain.CustomExceptions;
-using DiplomWebBack.Domain.Entities.Responses;
 using DiplomWebBack.Domain.Interfaces;
 using DiplomWebBack.Domain.Repos;
 using Mapster;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiplomWebBack.Application.Usecases.CommandHandlers.User
 {

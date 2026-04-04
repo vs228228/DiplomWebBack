@@ -105,5 +105,14 @@ namespace DiplomWebBack.Infrastructure.Repos
                 .AsNoTracking()
                 .AnyAsync(predicate, cancellationToken);
         }
+
+        public new async Task DeleteAsync(Guid projectId, CancellationToken cancellationToken)
+        {
+            var project = await _dbContext.Project.Where(p => p.Id == projectId).FirstOrDefaultAsync(cancellationToken);
+
+            project.IsDelete = true;
+
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

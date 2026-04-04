@@ -1,10 +1,5 @@
 ﻿using DiplomWebBack.Domain.Entities.m2m;
 using DiplomWebBack.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiplomWebBack.Domain.Entities 
 {

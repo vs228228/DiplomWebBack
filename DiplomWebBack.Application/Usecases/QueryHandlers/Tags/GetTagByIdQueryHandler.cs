@@ -4,11 +4,6 @@ using DiplomWebBack.Domain.CustomExceptions;
 using DiplomWebBack.DomainRepos.Repos;
 using Mapster;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiplomWebBack.Application.Usecases.QueryHandlers.Tags
 {

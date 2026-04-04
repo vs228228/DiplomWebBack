@@ -2,7 +2,7 @@
 
 namespace DiplomWebBack.Domain.Entities
 {
-    public class Project
+    public class Project : ISoftDeleteble
     {
         public Guid Id { get; set; }
 
@@ -17,5 +17,6 @@ namespace DiplomWebBack.Domain.Entities
         public ICollection<TagToProject> ProjectTags { get; set; } = new List<TagToProject>();
 
         public ICollection<UserToProject> UserToProjects { get; set; } = new List<UserToProject>();
+        public bool IsDelete { get; set; }
     }
 }

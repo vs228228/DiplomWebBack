@@ -5,7 +5,6 @@ using DiplomWebBack.Application.Usecases.Command.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 
 namespace DiplomWebBack.Api.Controllers
 {
