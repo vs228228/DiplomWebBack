@@ -18,7 +18,7 @@ namespace DiplomWebBack.Api.Controllers
     {
         private readonly IMediator _mediator;
 
-        public UserController(IMediator mediator) 
+        public UserController(IMediator mediator)
         {
             _mediator = mediator;
         }
@@ -40,7 +40,7 @@ namespace DiplomWebBack.Api.Controllers
 
             return Ok(user);
         }
-        
+
         /// <summary>
         /// Получить текущего юзера
         /// </summary>
@@ -62,7 +62,7 @@ namespace DiplomWebBack.Api.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<PaginatedList<UserProfileDto>>> GetAllUsersWithoutPagination([FromQuery] UserPaginatedRequestDto dto,CancellationToken cancellationToken)
+        public async Task<ActionResult<PaginatedList<UserProfileDto>>> GetAllUsersWithoutPagination([FromQuery] UserPaginatedRequestDto dto, CancellationToken cancellationToken)
         {
             var users = await _mediator.Send(new GetAllUsersWithoutPaginationQuery(dto), cancellationToken);
 
@@ -117,6 +117,13 @@ namespace DiplomWebBack.Api.Controllers
             var result = await _mediator.Send(new GetUserSkillsQuery(userId, initiatorId), ct);
 
             return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [HttpPut("{userId}")]
+        public async Task<ActionResult> UpdateUserAsync([FromRoute] Guid userId,  [FromBody] UpdateUserRequestDto request, CancellationToken ct)
+        {
+            return StatusCode(418);
         }
     }
 }
