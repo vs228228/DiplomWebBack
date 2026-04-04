@@ -86,5 +86,37 @@ namespace DiplomWebBack.Api.Controllers
 
             return Ok(result);
         }
+
+        /// <summary>
+        /// Получение скиллов текущего юзера
+        /// </summary>
+        /// <param name="resumeFile"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
+        [HttpGet("me/skills")]
+        public async Task<ActionResult<SkillExtractionResponse>> GetMySkillsAsync(CancellationToken ct)
+        {
+            var userId = HttpContext.GetCurrentUserId();
+
+            var result = await _mediator.Send(new GetUserSkillsQuery(userId, userId), ct);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Получение скиллов юзера
+        /// </summary>
+        /// <param name="resumeFile"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
+        [HttpGet("{userId}/skills")]
+        public async Task<ActionResult<SkillExtractionResponse>> GetUserSkillsAsync([FromRoute] Guid userId, CancellationToken ct)
+        {
+            var initiatorId = HttpContext.GetCurrentUserId();
+
+            var result = await _mediator.Send(new GetUserSkillsQuery(userId, initiatorId), ct);
+
+            return Ok(result);
+        }
     }
 }
