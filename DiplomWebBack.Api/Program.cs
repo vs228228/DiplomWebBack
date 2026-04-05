@@ -109,7 +109,21 @@ namespace DiplomWebBack.Api
 
             builder.Services.AddNotificationInfrastructure();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("cors", policy =>
+                {
+                    policy
+                        .WithOrigins("http://localhost:3000")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials(); 
+                });
+            });
+
             var app = builder.Build();
+
+            app.UseCors("cors");
 
             app.UseMiddleware<ExceptionHandlingMiddleware>();
 

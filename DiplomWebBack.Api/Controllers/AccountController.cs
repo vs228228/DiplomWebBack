@@ -33,8 +33,8 @@ namespace DiplomWebBack.Api.Controllers
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
-                Secure = false, // HTTP → ОБЯЗАТЕЛЬНО false
-                SameSite = SameSiteMode.Lax, // безопасный вариант для HTTP
+                Secure = true, // HTTP → ОБЯЗАТЕЛЬНО false
+                SameSite = SameSiteMode.None, // безопасный вариант для HTTP
                 Expires = DateTimeOffset.UtcNow.AddDays(7) // подгони под refresh token
             };
 
@@ -93,8 +93,8 @@ namespace DiplomWebBack.Api.Controllers
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
-                Secure = false, // HTTP → ОБЯЗАТЕЛЬНО false
-                SameSite = SameSiteMode.Lax, // безопасный вариант для HTTP
+                Secure = true, // HTTP → ОБЯЗАТЕЛЬНО false
+                SameSite = SameSiteMode.None, // безопасный вариант для HTTP
                 Expires = DateTimeOffset.UtcNow.AddDays(7) // подгони под refresh token
             };
 
