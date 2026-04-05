@@ -5,6 +5,7 @@ using DiplomWebBack.Application.Usecases.Command.Tags;
 using DiplomWebBack.Domain.Interfaces;
 using DiplomWebBack.Infrastructure.Context;
 using DiplomWebBack.Infrastructure.Extensions;
+using DiplomWebBack.Infrastructure.Hubs;
 using DiplomWebBack.Infrastructure.Services;
 using DiplomWebBack.Infrastructure.Settings;
 using Mapster;
@@ -106,6 +107,8 @@ namespace DiplomWebBack.Api
 
             builder.Services.AddMongo(builder.Configuration);
 
+            builder.Services.AddNotificationInfrastructure();
+
             var app = builder.Build();
 
             app.UseMiddleware<ExceptionHandlingMiddleware>();
@@ -129,6 +132,8 @@ namespace DiplomWebBack.Api
                 var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 await SeedData.SeedDataAsync(db);
             }
+
+            app.MapHub<NotificationHub>("/hubs/notifications");
 
             app.UseAuthentication();
             app.UseAuthorization();
