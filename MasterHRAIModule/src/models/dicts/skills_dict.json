@@ -1,0 +1,168 @@
+{
+  "python": {
+    "aliases": ["python", "py", "питон"],
+    "category": "backend",
+    "tags": ["language"],
+    "priority": 1
+  },
+  "c#": {
+    "aliases": ["c#", "csharp", "си шарп", "си-шарп"],
+    "category": "backend",
+    "tags": ["language"],
+    "priority": 1
+  },
+  "java": {
+    "aliases": ["java"],
+    "category": "backend",
+    "tags": ["language"]
+  },
+  "javascript": {
+    "aliases": ["javascript", "js", "java script"],
+    "category": "frontend",
+    "tags": ["language"]
+  },
+  "typescript": {
+    "aliases": ["typescript", "ts"],
+    "category": "frontend",
+    "tags": ["language"]
+  },
+
+  "react": {
+    "aliases": ["react", "reactjs", "react.js"],
+    "category": "frontend",
+    "tags": ["framework"]
+  },
+  "angular": {
+    "aliases": ["angular"],
+    "category": "frontend",
+    "tags": ["framework"]
+  },
+  "vue": {
+    "aliases": ["vue", "vuejs"],
+    "category": "frontend",
+    "tags": ["framework"]
+  },
+
+  "asp.net": {
+    "aliases": ["asp.net", "asp net", ".net", "dotnet", ".net core"],
+    "category": "backend",
+    "tags": ["framework"]
+  },
+  "spring": {
+    "aliases": ["spring", "spring boot"],
+    "category": "backend",
+    "tags": ["framework"]
+  },
+
+  "docker": {
+    "aliases": ["docker", "докер"],
+    "category": "devops",
+    "tags": ["container"]
+  },
+  "kubernetes": {
+    "aliases": ["kubernetes", "k8s"],
+    "category": "devops",
+    "tags": ["orchestration"]
+  },
+
+  "postgresql": {
+    "aliases": ["postgresql", "postgres", "psql"],
+    "category": "database",
+    "tags": ["sql"]
+  },
+  "mysql": {
+    "aliases": ["mysql"],
+    "category": "database"
+  },
+  "mongodb": {
+    "aliases": ["mongodb", "mongo"],
+    "category": "database",
+    "tags": ["nosql"]
+  },
+
+  "redis": {
+    "aliases": ["redis"],
+    "category": "cache"
+  },
+
+  "git": {
+    "aliases": ["git"],
+    "category": "tools"
+  },
+  "linux": {
+    "aliases": ["linux", "gnu/linux"],
+    "category": "os"
+  },
+
+  "rest": {
+    "aliases": ["rest", "rest api"],
+    "category": "backend"
+  },
+  "graphql": {
+    "aliases": ["graphql"],
+    "category": "backend"
+  },
+
+  "microservices": {
+    "aliases": ["microservices", "микросервисы"],
+    "category": "architecture"
+  },
+  "ddd": {
+    "aliases": ["ddd", "domain driven design"],
+    "category": "architecture"
+  },
+
+  "ci/cd": {
+    "aliases": ["ci/cd", "ci cd", "continuous integration"],
+    "category": "devops"
+  },
+
+  "aws": {
+    "aliases": ["aws", "amazon web services"],
+    "category": "cloud"
+  },
+  "azure": {
+    "aliases": ["azure", "microsoft azure"],
+    "category": "cloud"
+  },
+  "gcp": {
+    "aliases": ["gcp", "google cloud"],
+    "category": "cloud"
+  },
+  "ef core": {
+  "aliases": ["ef core", "entity framework core"],
+  "category": "backend"
+},
+"grpc": {
+  "aliases": ["grpc"],
+  "category": "backend"
+},
+"rabbitmq": {
+  "aliases": ["rabbitmq"],
+  "category": "messaging"
+},
+"signalr": {
+  "aliases": ["signalr"],
+  "category": "backend"
+},
+"xunit": {
+  "aliases": ["xunit"],
+  "category": "testing"
+},
+"testcontainers": {
+  "aliases": ["testcontainers"],
+  "category": "testing"
+},
+"hangfire": {
+  "aliases": ["hangfire"],
+  "category": "backend"
+},
+"elk": {
+  "aliases": ["elk", "elk stack"],
+  "category": "logging"
+},
+"ocelot": {
+  "aliases": ["ocelot"],
+  "category": "gateway"
+}
+}
