@@ -26,7 +26,7 @@ namespace DiplomWebBack.Api.Controllers
         {
             var userId = HttpContext.GetCurrentUserId();
 
-            await _notificationService.SendToUser(userId, new Domain.Entities.Responses.Notification("Test message", message, "Code_000"));
+            await _notificationService.SendToUser(userId, new Domain.Entities.Responses.Notification("Test message", message, 000));
 
             return Ok();
         }
