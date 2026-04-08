@@ -23,6 +23,7 @@ namespace DiplomWebBack.Infrastructure.Repos
         {
             var query = _dbContext.Project
                 .AsNoTracking()
+                .Where(p => p.IsDelete == false)
                 .Include(p => p.UserToProjects)
                     .ThenInclude(up => up.User)
                 .Include(p => p.ProjectTags)
@@ -80,7 +81,7 @@ namespace DiplomWebBack.Infrastructure.Repos
         {
             return await _dbContext.Project
             .TrackChanges(model.TrackChanges)
-            .Where(p => p.Id == model.Id)
+            .Where(p => p.Id == model.Id && p.IsDelete == false)
             .IncludeTags(model.IncludeTags)
             .IncludeEmployees(model.IncludeEmployee)
             .IncludeCreator(model.IncludeCreatedBy)
