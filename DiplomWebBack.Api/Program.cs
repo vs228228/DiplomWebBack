@@ -37,6 +37,7 @@ namespace DiplomWebBack.Api
             builder.Services.RegisterAppService();
             builder.Services.AddSingleton(TypeAdapterConfig.GlobalSettings);
             builder.Services.AddScoped<IMapper, ServiceMapper>();
+            builder.Services.AddScoped<IFileService, FileService>();
 
             var config = TypeAdapterConfig.GlobalSettings;
 
@@ -151,6 +152,7 @@ namespace DiplomWebBack.Api
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseStaticFiles();
 
             app.MapControllers();
 

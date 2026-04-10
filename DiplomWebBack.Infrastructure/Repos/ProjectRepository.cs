@@ -19,11 +19,20 @@ namespace DiplomWebBack.Infrastructure.Repos
             _dbContext = dbContext;
         }
 
-        public async Task<PaginatedList<Project>> GetAllPagedAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
+        public async Task<PaginatedList<Project>> GetAllPagedAsync(
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken,
+            string search = "",
+            IEnumerable<Guid> filtredByUser = null,
+            IEnumerable<Guid> filtredByTags = null)
         {
             var query = _dbContext.Project
                 .AsNoTracking()
                 .Where(p => p.IsDelete == false)
+                .Where(p => p.Title.Contains(search))
+                .OptionalWhere(filtredByUser != null, p => filtredByUser.Any(cb => cb == p.CreatedById))
+                .OptionalWhere(filtredByTags != null, p => p.ProjectTags.Any(pt => filtredByTags.Any(t => t == pt.TagId)))
                 .Include(p => p.UserToProjects)
                     .ThenInclude(up => up.User)
                 .Include(p => p.ProjectTags)

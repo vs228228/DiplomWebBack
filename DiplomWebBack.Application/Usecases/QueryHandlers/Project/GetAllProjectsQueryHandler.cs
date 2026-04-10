@@ -20,7 +20,13 @@ namespace DiplomWebBack.Application.Usecases.QueryHandlers.Project
 
         public async Task<PaginatedList<ProjectResponseDto>> Handle(GetAllProjectsQuery request, CancellationToken cancellationToken)
         {
-            var projects = await _projectRepository.GetAllPagedAsync(request.PageNumber, request.PageSize, cancellationToken);
+            var projects = await _projectRepository.GetAllPagedAsync(
+                request.Request.PageNumber, 
+                request.Request.PageSize, 
+                cancellationToken,
+                request.Request.SearchBy,
+                request.Request.FilterByCreator,
+                request.Request.FiltredByTags);
 
             return projects.Adapt<PaginatedList<ProjectResponseDto>>();
         }

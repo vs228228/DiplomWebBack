@@ -7,7 +7,13 @@ namespace DiplomWebBack.Domain.Repos
 {
     public interface IProjectRepository : IBaseRepository<Project>
     {
-        Task<PaginatedList<Project>> GetAllPagedAsync(int pageNumber, int pageSize, CancellationToken cancellationToken);
+        Task<PaginatedList<Project>> GetAllPagedAsync(
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken,
+            string search = "",
+            IEnumerable<Guid> filtredByUser = null,
+            IEnumerable<Guid> filtredByTags = null);
 
         Task<ICollection<UserToProject>> GetUsersAsync(Guid projectId, CancellationToken cancellationToken);
         Task<ICollection<UserToProject>> GetEmployeesAsync(Guid projectId, CancellationToken cancellationToken);

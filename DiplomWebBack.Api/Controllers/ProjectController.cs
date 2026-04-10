@@ -45,11 +45,11 @@ public class ProjectController : ControllerBase
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpGet]
-    public async Task<ActionResult<PaginatedList<ProjectResponseDto>>> GetAllProjectsAsync([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<PaginatedList<ProjectResponseDto>>> GetAllProjectsAsync([FromQuery] GetAllProjectsRequestDto request, CancellationToken cancellationToken = default)
     {
         var userId = HttpContext.GetCurrentUserId();
 
-        var projects = await _mediator.Send(new GetAllProjectsQuery(pageNumber, pageSize), cancellationToken);
+        var projects = await _mediator.Send(new GetAllProjectsQuery(request), cancellationToken);
 
         return Ok(projects);
     }

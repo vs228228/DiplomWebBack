@@ -32,7 +32,11 @@ namespace DiplomWebBack.Application.Usecases.QueryHandlers.User
                 throw new NotFoundException($"Пользователь с id {request.UserId} не найден");
             }
 
-            return user.Adapt<UserProfileDto>();
+            var ans =  user.Adapt<UserProfileDto>();
+
+            ans.CanEdit = user.Role == Domain.Enums.UserRole.Admin || user.Role == Domain.Enums.UserRole.Manager ? true : false;
+
+            return ans;
         }
     }
 }

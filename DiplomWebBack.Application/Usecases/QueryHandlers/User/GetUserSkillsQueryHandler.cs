@@ -1,5 +1,6 @@
 ﻿using DiplomWebBack.Application.Services.Interfaces;
 using DiplomWebBack.Application.Usecases.Query.User;
+using DiplomWebBack.Domain.CustomExceptions;
 using DiplomWebBack.Domain.Entities.Responses;
 using DiplomWebBack.Domain.Interfaces;
 using DiplomWebBack.Domain.Repos;
@@ -28,12 +29,12 @@ namespace DiplomWebBack.Application.Usecases.QueryHandlers.User
                 return (await _repository.GetByUserIdAsync(initiator.Id)).Adapt<SkillExtractionResponse>();
             }
 
-            if(!false) // потом рассмотреть вариант того кто это может делать
+            if(false) // потом рассмотреть вариант того кто это может делать
             {
-
+                throw new ForbiddenException("Юзер не moje");
             }
 
-            return (await _repository.GetByUserIdAsync(initiator.Id)).Adapt<SkillExtractionResponse>();
+            return (await _repository.GetByUserIdAsync(request.UserId)).Adapt<SkillExtractionResponse>();
         }
     }
 }

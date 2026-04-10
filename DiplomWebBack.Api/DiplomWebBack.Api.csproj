@@ -24,6 +24,10 @@
     <ProjectReference Include="..\DiplomWebBack.Infrastructure\DiplomWebBack.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\uploads\" />
+  </ItemGroup>
+
 	<PropertyGroup>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>

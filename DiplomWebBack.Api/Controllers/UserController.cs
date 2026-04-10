@@ -119,11 +119,39 @@ namespace DiplomWebBack.Api.Controllers
             return Ok(result);
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Обновить юзера
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="request"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
         [HttpPut("{userId}")]
         public async Task<ActionResult> UpdateUserAsync([FromRoute] Guid userId,  [FromBody] UpdateUserRequestDto request, CancellationToken ct)
         {
-            return StatusCode(418);
+            var initiatorId = HttpContext.GetCurrentUserId();
+
+            await _mediator.Send(new UpdateUserCommand(initiatorId, userId, request));
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Обновить
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpPost("avatar")]
+        public async Task<IActionResult> UploadAvatar(
+            [FromForm] UploadAvatarRequest request,
+            CancellationToken cancellationToken)
+        {
+            var userId = HttpContext.GetCurrentUserId();
+
+            await _mediator.Send(new UploadAvatarCommand(userId, request.File), cancellationToken);
+
+            return Ok();
         }
     }
 }

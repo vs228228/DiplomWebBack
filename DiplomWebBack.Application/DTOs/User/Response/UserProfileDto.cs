@@ -14,5 +14,6 @@ namespace DiplomWebBack.Application.DTOs.User.Response
         public DateTimeOffset CreatedAt { get; set; }
         public UserRole Role { get; set; }
         public string? Avatar { get; set; }
+        public bool CanEdit { get; set; }
     }
 }
