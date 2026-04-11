@@ -21,7 +21,7 @@ namespace DiplomWebBack.Infrastructure.Services
             _options = options.Value;
         }
 
-        public async Task<SkillExtractionResponse> ExtractSkillsAsync(
+        public async Task<SkillExtraction> ExtractSkillsAsync(
         IFormFile file,
         CancellationToken ct)
         {
@@ -37,7 +37,7 @@ namespace DiplomWebBack.Infrastructure.Services
 
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadFromJsonAsync<SkillExtractionResponse>(cancellationToken: ct);
+            return await response.Content.ReadFromJsonAsync<SkillExtraction>(cancellationToken: ct);
         }
 
         private string GetContentType(string fileName)

@@ -1,8 +1,10 @@
-﻿using System.Text.Json.Serialization;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System.Text.Json.Serialization;
 
 namespace DiplomWebBack.Domain.Entities.Responses
 {
-    public class SkillExtractionResponse
+    public class SkillExtraction
     {
         [JsonPropertyName("skills")]
         public List<SkillItem> Skills { get; set; } = new();
@@ -13,6 +15,9 @@ namespace DiplomWebBack.Domain.Entities.Responses
 
     public class SkillItem
     {
+        [BsonGuidRepresentation(GuidRepresentation.Standard)]
+        public Guid Id { get; set; } = Guid.NewGuid();
+
         [JsonPropertyName("name")]
         public string Name { get; set; }
 

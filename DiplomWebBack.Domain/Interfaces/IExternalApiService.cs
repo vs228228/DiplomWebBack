@@ -5,7 +5,7 @@ namespace DiplomWebBack.Domain.Interfaces
 {
     public interface IExternalApiService
     {
-        Task<SkillExtractionResponse> ExtractSkillsAsync(
+        Task<SkillExtraction> ExtractSkillsAsync(
         IFormFile file,
         CancellationToken ct);
         Task<ResumeAnalysisResponse> AnalyzeResumeAsync(string text, CancellationToken ct);

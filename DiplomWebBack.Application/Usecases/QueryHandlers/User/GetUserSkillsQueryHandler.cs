@@ -9,7 +9,7 @@ using MediatR;
 
 namespace DiplomWebBack.Application.Usecases.QueryHandlers.User
 {
-    public class GetUserSkillsQueryHandler : IRequestHandler<GetUserSkillsQuery, SkillExtractionResponse>
+    public class GetUserSkillsQueryHandler : IRequestHandler<GetUserSkillsQuery, SkillExtraction>
     {
         private readonly IUserSkillsRepository _repository;
         private readonly IUserVerificationService _userVerificationService;
@@ -20,13 +20,13 @@ namespace DiplomWebBack.Application.Usecases.QueryHandlers.User
             _userVerificationService = userVerificationService;
         }
 
-        public async Task<SkillExtractionResponse> Handle(GetUserSkillsQuery request, CancellationToken cancellationToken)
+        public async Task<SkillExtraction> Handle(GetUserSkillsQuery request, CancellationToken cancellationToken)
         {
             var initiator = await _userVerificationService.CheckIfUserValidAndGetAsync(request.InitiatorId, cancellationToken);
 
             if(request.UserId == request.InitiatorId)
             {
-                return (await _repository.GetByUserIdAsync(initiator.Id)).Adapt<SkillExtractionResponse>();
+                return (await _repository.GetByUserIdAsync(initiator.Id)).Adapt<SkillExtraction>();
             }
 
             if(false) // потом рассмотреть вариант того кто это может делать
@@ -34,7 +34,7 @@ namespace DiplomWebBack.Application.Usecases.QueryHandlers.User
                 throw new ForbiddenException("Юзер не moje");
             }
 
-            return (await _repository.GetByUserIdAsync(request.UserId)).Adapt<SkillExtractionResponse>();
+            return (await _repository.GetByUserIdAsync(request.UserId)).Adapt<SkillExtraction>();
         }
     }
 }

@@ -13,17 +13,70 @@ namespace DiplomWebBack.Infrastructure.Repos
             _collection = database.GetCollection<UserSkillsDocument>("user_skills");
         }
 
-        public async Task SaveAsync(Guid userId, SkillExtractionResponse response)
+        public async Task SaveAsync(Guid userId, SkillExtraction response)
         {
-            var document = new UserSkillsDocument
-            {
-                UserId = userId,
-                Skills = response.Skills,
-                TotalFound = response.TotalFound,
-                CreatedAt = DateTime.UtcNow
-            };
+            var existing = await _collection
+                .Find(x => x.UserId == userId)
+                .SortByDescending(x => x.CreatedAt)
+                .FirstOrDefaultAsync();
 
-            await _collection.InsertOneAsync(document);
+            // проставляем Id новым скиллам (если вдруг null/default)
+            foreach (var skill in response.Skills)
+            {
+                if (skill.Id == Guid.Empty)
+                    skill.Id = Guid.NewGuid();
+            }
+
+            if (existing == null)
+            {
+                var document = new UserSkillsDocument
+                {
+                    UserId = userId,
+                    Skills = response.Skills
+                        .GroupBy(s => s.Name.ToLower())
+                        .Select(g => g.First())
+                        .ToList(),
+                    TotalFound = response.TotalFound,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                await _collection.InsertOneAsync(document);
+
+                return;
+            }
+
+            // делаем словарь существующих по имени
+            var existingDict = existing.Skills
+                .GroupBy(s => s.Name.ToLower())
+                .ToDictionary(g => g.Key, g => g.First());
+
+            foreach (var newSkill in response.Skills)
+            {
+                var key = newSkill.Name.ToLower();
+
+                if (!existingDict.ContainsKey(key))
+                {
+                    existingDict[key] = newSkill; // новый скилл
+                }
+                else
+                {
+                    // если хочешь — можно обновлять данные
+                    var existingSkill = existingDict[key];
+                    existingSkill.Level = newSkill.Level;
+                    existingSkill.Years = newSkill.Years;
+                }
+            }
+
+            var mergedSkills = existingDict.Values.ToList();
+
+            var update = Builders<UserSkillsDocument>.Update
+                .Set(x => x.Skills, mergedSkills)
+                .Set(x => x.TotalFound, mergedSkills.Count)
+                .Set(x => x.CreatedAt, DateTime.UtcNow);
+
+            await _collection.UpdateOneAsync(
+                x => x.Id == existing.Id,
+                update);
         }
 
         public async Task<UserSkillsDocument?> GetByUserIdAsync(Guid userId)
@@ -32,6 +85,16 @@ namespace DiplomWebBack.Infrastructure.Repos
                 .Find(x => x.UserId == userId)
                 .SortByDescending(x => x.CreatedAt)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task RemoveSkillAsync(Guid userId, Guid skillId)
+        {
+            var update = Builders<UserSkillsDocument>.Update
+                .PullFilter(x => x.Skills, s => s.Id == skillId);
+
+            await _collection.UpdateOneAsync(
+                x => x.UserId == userId,
+                update);
         }
     }
 }

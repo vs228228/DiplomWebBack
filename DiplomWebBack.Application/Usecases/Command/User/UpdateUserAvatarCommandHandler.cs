@@ -37,7 +37,7 @@ namespace DiplomWebBack.Application.Usecases.Command.User
                 throw new BadRequestException("File is empty");
             }
 
-            var userAvatarPath = await _fileService.SaveFilesAsync(new List<IFormFile> { request.File }, new List<string> { user.Id.ToString()});
+            var userAvatarPath = await _fileService.SaveFilesAsync(new List<IFormFile> { request.File }, new List<string> { user.Id.ToString() + ".jpg"});
 
             user.Avatar = userAvatarPath[0];
 
