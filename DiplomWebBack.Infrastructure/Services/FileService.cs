@@ -25,6 +25,11 @@ namespace DiplomWebBack.Infrastructure.Services
 
             var uploadFolder = Path.Combine(rootPath, "wwwroot", "uploads");
 
+            if (!Directory.Exists(uploadFolder))
+            {
+                Directory.CreateDirectory(uploadFolder);
+            }
+
             int i = 0;
 
             foreach (var file in files)
