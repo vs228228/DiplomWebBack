@@ -1,0 +1,14 @@
+fastapi
+langdetect
+spacy
+skillNer
+python-docx
+PyPDF2
+uvicorn
+ipython
+python-multipart
+natasha
+rapidfuzz
+camelot-py[cv]
+docx2python
+yargy
