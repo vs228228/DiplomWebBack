@@ -1,5 +1,4 @@
-﻿using DiplomWebBack.Application.DTOs.User.Request;
-using DiplomWebBack.Domain.Entities;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace DiplomWebBack.Application.DTOs.Project.Request
 {
@@ -9,5 +8,7 @@ namespace DiplomWebBack.Application.DTOs.Project.Request
         public string Description { get; set; }
         public IEnumerable<Guid> Tags { get; set; }
        /* public IEnumerable<UserProjectCreateRequestDto> Users { get; set; }*/
+       public string Customer { get; set; }
+        public IFormFile? TechnicalTask { get; set; } = null;
     }
 }

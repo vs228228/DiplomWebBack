@@ -9,6 +9,7 @@ namespace DiplomWebBack.Application.DTOs.Project.Response
 
         public string Title { get; set; }
         public string Description { get; set; }
+        public string Customer { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
@@ -18,5 +19,6 @@ namespace DiplomWebBack.Application.DTOs.Project.Response
 
         public ICollection<UserProjectResponseDto> Users { get; set; } = new List<UserProjectResponseDto>();
         public bool CanEdit { get; set; }
+        public string TechnicalTask { get; set; }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using DiplomWebBack.Domain.Entities.m2m;
+using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DiplomWebBack.Domain.Entities
 {
@@ -8,6 +10,7 @@ namespace DiplomWebBack.Domain.Entities
 
         public string Title { get; set; }
         public string Description { get; set; }
+        public string Customer { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
@@ -18,5 +21,7 @@ namespace DiplomWebBack.Domain.Entities
 
         public ICollection<UserToProject> UserToProjects { get; set; } = new List<UserToProject>();
         public bool IsDelete { get; set; }
+
+        public string TechnicalTask { get; set; }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using DiplomWebBack.Application.Services.Interfaces;
 using DiplomWebBack.Application.Usecases.Command.User;
+using DiplomWebBack.Domain.CustomExceptions;
 using DiplomWebBack.Domain.Entities.Responses;
+using DiplomWebBack.Domain.Enums;
 using DiplomWebBack.Domain.Repos;
 using MediatR;
 
@@ -19,6 +21,13 @@ namespace DiplomWebBack.Application.Usecases.CommandHandlers.User
 
         public async Task<Guid> Handle(AddUserSkillCommand request, CancellationToken cancellationToken)
         {
+            var initiator = await _userVerificationService.CheckIfUserValidAndGetAsync(request.InitiatorId, cancellationToken);
+
+            if(request.UserId != request.InitiatorId && initiator.Role != UserRole.Manager && initiator.Role != UserRole.Admin)
+            {
+                throw new ForbiddenException("Нет прав");
+            }
+
             var user = await _userVerificationService.CheckIfUserValidAndGetAsync(request.UserId, cancellationToken);
 
             var skills = new SkillExtraction()

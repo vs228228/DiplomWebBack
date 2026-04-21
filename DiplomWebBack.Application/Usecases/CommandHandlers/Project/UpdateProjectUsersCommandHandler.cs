@@ -28,7 +28,8 @@ namespace DiplomWebBack.Application.Usecases.CommandHandlers.Project
 
         public async Task<Unit> Handle(UpdateProjectUsersCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userVerificationService.CheckIfUserValidAndGetAsync(request.UserId, cancellationToken);
+            var user = await _userVerificationService
+                .CheckIfUserValidAndGetAsync(request.UserId, cancellationToken);
 
             var model = new GetProjectByIdModel()
             {
@@ -37,18 +38,45 @@ namespace DiplomWebBack.Application.Usecases.CommandHandlers.Project
                 IncludeEmployee = true,
             };
 
-            var project = await _projectVerificationService.CheckIfProjectValidForUpdateAndGetAsync(model, user.Id,
-                user.Role == Domain.Enums.UserRole.Admin ? true : false, cancellationToken, trackChanges: true);
+            var project = await _projectVerificationService
+                .CheckIfProjectValidForUpdateAndGetAsync(
+                    model,
+                    user.Id,
+                    user.Role == Domain.Enums.UserRole.Admin,
+                    cancellationToken,
+                    trackChanges: true);
 
-            project.UserToProjects.Clear();
+            var existingUsers = project.UserToProjects.ToList();
 
-            await _userRepository.RemoveUserToProjectAsync(project.Id);
+            var newUsers = request.Dto.Users
+                .DistinctBy(u => u.Id)
+                .ToList();
 
-            var users = request.Dto.Users.DistinctBy(u => u.Id).ToList();
+            var existingUserIds = existingUsers.Select(x => x.UserId).ToHashSet();
+            var newUserIds = newUsers.Select(x => x.Id).ToHashSet();
 
-            foreach (var userr in users)
+            var usersToRemove = existingUsers
+                .Where(x => !newUserIds.Contains(x.UserId))
+                .ToList();
+
+            foreach (var userToRemove in usersToRemove)
             {
-                project.UserToProjects.Add(new UserToProject() { JoinedAt = DateTime.UtcNow, ProjectId = project.Id, UserId =  userr.Id, Role = userr.Role});
+                project.UserToProjects.Remove(userToRemove);
+            }
+
+            var usersToAdd = newUsers
+                .Where(x => !existingUserIds.Contains(x.Id))
+                .ToList();
+
+            foreach (var userToAdd in usersToAdd)
+            {
+                project.UserToProjects.Add(new UserToProject
+                {
+                    ProjectId = project.Id,
+                    UserId = userToAdd.Id,
+                    Role = userToAdd.Role,
+                    JoinedAt = DateTime.UtcNow
+                });
             }
 
             await _projectRepository.UpdateAsync(project);

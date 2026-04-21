@@ -60,8 +60,10 @@ public class ProjectController : ControllerBase
     /// <param name="project"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
+    [Produces("application/json")]
+    [Consumes("multipart/form-data")]
     [HttpPost]
-    public async Task<ActionResult<Guid>> CreateProjectAsync([FromBody] ProjectCreateRequestDto project, CancellationToken cancellationToken)
+    public async Task<ActionResult<Guid>> CreateProjectAsync([FromForm] ProjectCreateRequestDto project, CancellationToken cancellationToken)
     {
         var userId = HttpContext.GetCurrentUserId();
 

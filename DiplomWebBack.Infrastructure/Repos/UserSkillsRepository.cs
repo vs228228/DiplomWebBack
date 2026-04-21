@@ -89,12 +89,28 @@ namespace DiplomWebBack.Infrastructure.Repos
 
         public async Task RemoveSkillAsync(Guid userId, Guid skillId)
         {
-            var update = Builders<UserSkillsDocument>.Update
+            // удаляем
+            var pullUpdate = Builders<UserSkillsDocument>.Update
                 .PullFilter(x => x.Skills, s => s.Id == skillId);
 
             await _collection.UpdateOneAsync(
                 x => x.UserId == userId,
-                update);
+                pullUpdate);
+
+            // получаем обновлённый документ
+            var doc = await _collection
+                .Find(x => x.UserId == userId)
+                .FirstOrDefaultAsync();
+
+            if (doc != null)
+            {
+                var updateTotal = Builders<UserSkillsDocument>.Update
+                    .Set(x => x.TotalFound, doc.Skills.Count);
+
+                await _collection.UpdateOneAsync(
+                    x => x.UserId == userId,
+                    updateTotal);
+            }
         }
     }
 }
