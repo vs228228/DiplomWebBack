@@ -34,8 +34,8 @@ class SkillExtractor:
         ml_model_skills = self.ml_extractor.extract(text)
 
         ml_model_skills = [
-            Skill(name=s, category="ml_model", source_section="text")
-            for s in ml_model_skills
+            Skill(name=s["name"], category="ml_model", source_section="text")
+            for s in ml_model_skills if isinstance(s, dict) and "name" in s
         ]
 
         skill_tables = [t for t in tables if self._is_skill_table(t)]
@@ -61,7 +61,7 @@ class SkillExtractor:
 
         filtered = [
             s for s in merged
-            if self.dataset_filter.is_valid_skill(s.name)
+            if self.dataset_filter.is_valid_skill(s.name) or s.category == "llm_applied"
         ]
 
         return SkillProfile(skills=filtered)
@@ -175,12 +175,22 @@ class SkillExtractor:
         return float(m.group()) if m else None
 
     def _merge(self, skills, table_skills):
-
         pool = {}
 
-        def add_skill(s: Skill):
-            key = self._normalize_name(s.name)
+        def normalize_key(name: str) -> str:
+            if not name or isinstance(name, list):
+                return ""
 
+            name = name.lower().strip()
+
+            for skill, data in self.skill_dict.raw.items():
+                if name in data["aliases"]:
+                    return skill
+
+            return name
+
+        def add_skill(s: Skill):
+            key = normalize_key(s.name)
             if not key:
                 return
 
@@ -188,15 +198,31 @@ class SkillExtractor:
                 pool[key] = {
                     "skill": s,
                     "score": 0,
-                    "sources": set()
+                    "sources": set(),
+                    "has_llm_applied": False
                 }
 
-            pool[key]["score"] += SOURCE_PRIORITY.get(s.category, 1)
-            pool[key]["sources"].add(s.category)
+            entry = pool[key]
+
+            entry["sources"].add(s.category)
+            entry["score"] += SOURCE_PRIORITY.get(s.category, 1)
+
+            if s.category == "llm_applied":
+                entry["has_llm_applied"] = True
+
+            if s.category == "llm_applied":
+                entry["skill"] = s
+                return
 
             if s.category == "table":
-                pool[key]["skill"] = s
+                if not entry["has_llm_applied"]:
+                    entry["skill"] = s
+                return
 
+            if entry["skill"].category not in ("llm_applied", "llm_hard"):
+                entry["skill"] = s
+
+        # merge all sources
         for s in skills + table_skills:
             add_skill(s)
 
@@ -205,6 +231,11 @@ class SkillExtractor:
         for item in pool.values():
             skill = item["skill"]
             score = item["score"]
+
+            # 🔥 applied bypasses filter threshold
+            if item["has_llm_applied"]:
+                result.append(skill)
+                continue
 
             if score < 3:
                 continue
@@ -219,7 +250,6 @@ class SkillExtractor:
 
         name = name.lower().strip()
 
-        # 🔥 через aliases
         for skill, data in self.skill_dict.raw.items():
             if name in data["aliases"]:
                 return skill
@@ -250,9 +280,9 @@ class SkillExtractor:
         return text
 
 SOURCE_PRIORITY = {
-    "llm": 6,
+    "llm_hard": 6,
+    "llm_applied": 6,
     "table": 5,
     "dict": 4,
-    "ml": 2,
-    "ml_model": 1,
+    "ml_model": 3,
 }

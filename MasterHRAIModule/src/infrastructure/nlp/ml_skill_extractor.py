@@ -95,6 +95,8 @@ def normalize_skill(text: str) -> str:
         "TypeScript": ["typescript"],
         "Fluent Assertions": ["fluent assertions"],
         "Identity Server": ["identity server"],
+        "MediatR": ["mediat", "mediatr"],
+        "Domain-Driven-Design": ["domain driven", "ddd", "Domain-driven"],
     }
 
     for correct, variants in replacements.items():
