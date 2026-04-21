@@ -2,11 +2,13 @@ import re
 
 import unicodedata
 
-from src.infrastructure.nlp.ner_skill_extractor import SkillNerWrapper
-
 from src.core.domain.skill import Skill
 from src.core.domain.skill_profile import SkillProfile
+from src.infrastructure.ml.dataset_filter import DatasetFilter
 from src.infrastructure.nlp.lang_detector import LanguageDetector
+from src.infrastructure.nlp.llm_skill_labeler import LLMSkillLabeler
+from src.infrastructure.nlp.ml_skill_extractor import MLSkillExtractor
+from src.infrastructure.nlp.ner_skill_extractor import SkillNerWrapper
 from src.infrastructure.nlp.skill_dictionary import SkillDictionary
 
 
@@ -16,8 +18,12 @@ class SkillExtractor:
         self.lang_detector = LanguageDetector()
         self.skillner = SkillNerWrapper()
         self.skill_dict = SkillDictionary()
+        self.llm_labeler = LLMSkillLabeler()
+        self.dataset_filter = DatasetFilter()
+        self.ml_extractor = MLSkillExtractor()
 
-    def extract(self, text: str, tables: list) -> SkillProfile:
+    def extract(self, text: str, tables: list, usellm: bool = True) -> SkillProfile:
+
         lang = self.lang_detector.detect(text)
 
         if lang == "ru":
@@ -25,23 +31,40 @@ class SkillExtractor:
         else:
             ml_skills = self._extract_en(text)
 
-        skill_tables = [t for t in tables if self._is_skill_table(t)]
-        other_tables_text = self._tables_to_text([t for t in tables if not self._is_skill_table(t)])
+        ml_model_skills = self.ml_extractor.extract(text)
 
-        # 4. Извлекаем навыки из таблиц
+        ml_model_skills = [
+            Skill(name=s["name"], category="ml_model", source_section="text")
+            for s in ml_model_skills if isinstance(s, dict) and "name" in s
+        ]
+
+        skill_tables = [t for t in tables if self._is_skill_table(t)]
         table_skills = self._extract_skill_tables(skill_tables)
 
-        # 5. Обрабатываем остальной текст из не-таблиц как обычный текст
-        if other_tables_text:
-            if lang == "ru":
-                ml_skills += self._extract_ru(other_tables_text)
-            else:
-                ml_skills += self._extract_en(other_tables_text)
+        llm_skills = []
+        if usellm:
 
-        # 6. Объединяем все навыки
-        merged = self._merge(ml_skills, table_skills)
+            llm_hard, llm_applied = self.llm_labeler.extract(text)
 
-        return SkillProfile(skills=merged)
+            llm_skills = [
+                            Skill(name=s, category="llm_hard", source_section="text")
+                            for s in llm_hard
+                        ] + [
+                            Skill(name=s, category="llm_applied", source_section="text")
+                            for s in llm_applied
+                        ]
+
+        merged = self._merge(
+            ml_skills + llm_skills + ml_model_skills,
+            table_skills
+        )
+
+        filtered = [
+            s for s in merged
+            if self.dataset_filter.is_valid_skill(s.name) or s.category == "llm_applied"
+        ]
+
+        return SkillProfile(skills=filtered)
 
     def _extract_en(self, text):
         found = self.skillner.extract(text)
@@ -73,34 +96,6 @@ class SkillExtractor:
             for s in all_skills
         ]
 
-    def _tables_to_text(self, tables: list) -> str:
-        parts = []
-
-        for table in tables:
-            for row in table:
-                for cell in row:
-                    if cell and str(cell).strip():
-                        parts.append(str(cell))
-
-        return "\n".join(parts)
-
-    def _extract_skillner(self, text):
-
-        found = self.skillner.extract(text)
-
-        skills = []
-
-        for s in found:
-            skills.append(
-                Skill(
-                    name=s,
-                    category="ml",
-                    source_section="text"
-                )
-            )
-
-        return skills
-
     def _extract_skill_tables(self, tables):
         skills = []
 
@@ -118,23 +113,19 @@ class SkillExtractor:
                 continue
 
             for row in table[1:]:
-                # исключаем пустые строки
                 if not any(str(c).strip() for c in row):
                     continue
 
-                # исключаем строки, где все ячейки одинаковые
                 stripped_row = [str(c).strip() for c in row if c is not None]
                 if len(set(stripped_row)) <= 1:
                     continue
 
-                # берем название навыка
                 if skill_idx >= len(row):
                     continue
                 skill_name = str(row[skill_idx]).strip()
                 if not skill_name:
                     continue
 
-                # уровень и опыт
                 level = row[level_idx].strip() if level_idx is not None and level_idx < len(row) else None
                 years = self._parse_years(row[years_idx]) if years_idx is not None and years_idx < len(row) else None
 
@@ -183,32 +174,87 @@ class SkillExtractor:
         m = re.search(r"\d+(\.\d+)?", text)
         return float(m.group()) if m else None
 
-    def _merge(self, ml, table):
+    def _merge(self, skills, table_skills):
+        pool = {}
 
-        merged = {}
+        def normalize_key(name: str) -> str:
+            if not name or isinstance(name, list):
+                return ""
 
-        # сначала ML/dict
-        for s in ml:
-            merged[s.name.lower()] = s
+            name = name.lower().strip()
 
-        # потом таблицы (приоритет)
-        for s in table:
-            key = s.name.lower()
+            for skill, data in self.skill_dict.raw.items():
+                if name in data["aliases"]:
+                    return skill
 
-            if key in merged:
-                existing = merged[key]
+            return name
 
-                merged[key] = Skill(
-                    name=s.name,
-                    category="table",
-                    level=s.level or existing.level,
-                    years=s.years or existing.years,
-                    source_section="table"
-                )
-            else:
-                merged[key] = s
+        def add_skill(s: Skill):
+            key = normalize_key(s.name)
+            if not key:
+                return
 
-        return list(merged.values())
+            if key not in pool:
+                pool[key] = {
+                    "skill": s,
+                    "score": 0,
+                    "sources": set(),
+                    "has_llm_applied": False
+                }
+
+            entry = pool[key]
+
+            entry["sources"].add(s.category)
+            entry["score"] += SOURCE_PRIORITY.get(s.category, 1)
+
+            if s.category == "llm_applied":
+                entry["has_llm_applied"] = True
+
+            if s.category == "llm_applied":
+                entry["skill"] = s
+                return
+
+            if s.category == "table":
+                if not entry["has_llm_applied"]:
+                    entry["skill"] = s
+                return
+
+            if entry["skill"].category not in ("llm_applied", "llm_hard"):
+                entry["skill"] = s
+
+        # merge all sources
+        for s in skills + table_skills:
+            add_skill(s)
+
+        result = []
+
+        for item in pool.values():
+            skill = item["skill"]
+            score = item["score"]
+
+            # 🔥 applied bypasses filter threshold
+            if item["has_llm_applied"]:
+                result.append(skill)
+                continue
+
+            if score < 3:
+                continue
+
+            result.append(skill)
+
+        return result
+
+    def _normalize_name(self, name: str) -> str:
+        if not name or isinstance(name, list):
+            return ""
+
+        name = name.lower().strip()
+
+        for skill, data in self.skill_dict.raw.items():
+            if name in data["aliases"]:
+                return skill
+
+        return name
 
     def _normalize(self, text: str) -> str:
         if not text:
@@ -232,3 +278,11 @@ class SkillExtractor:
         text = re.sub(r"\s+", " ", text).strip()
 
         return text
+
+SOURCE_PRIORITY = {
+    "llm_hard": 6,
+    "llm_applied": 6,
+    "table": 5,
+    "dict": 4,
+    "ml_model": 3,
+}

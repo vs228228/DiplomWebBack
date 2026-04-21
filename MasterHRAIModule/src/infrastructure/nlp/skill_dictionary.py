@@ -17,13 +17,22 @@ class SkillDictionary:
 
     def find_skills_ru(self, text: str):
 
-        tokens = self.ru_processor.process(text)
+        text = text.lower()
+
+        tokens = re.findall(r"[a-zA-Zа-яА-Я0-9\+#\.]+", text)
 
         found = set()
 
-        for token in tokens:
-            if token in self.alias_to_skill:
-                found.add(self.alias_to_skill[token])
+        for t in tokens:
+            if t in self.alias_to_skill:
+                found.add(self.alias_to_skill[t])
+
+        for i in range(len(tokens)):
+            for j in range(i + 1, min(i + 3, len(tokens))):
+                phrase = " ".join(tokens[i:j + 1])
+
+                if phrase in self.alias_to_skill:
+                    found.add(self.alias_to_skill[phrase])
 
         return list(found)
 
@@ -104,7 +113,7 @@ class SkillDictionary:
 
                 for item in items:
                     item_lower = item.lower()
-                    if len(item) > 5 and item_lower not in self.alias_to_skill:
-                        found.add(item)
+                    if item_lower in self.alias_to_skill:
+                        found.add(self.alias_to_skill[item_lower])
 
         return list(found)
