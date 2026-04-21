@@ -15,13 +15,14 @@ class SkillExtractionService:
         self.extractor = TextExtractor()
         self.skill_extractor = SkillExtractor()
 
-    def extract_from_file(self, file_path: str) -> ExtractedSkillsResult:
+    def extract_from_file(self, file_path: str, usellm: bool = True) -> ExtractedSkillsResult:
 
         doc = self.extractor.extract(file_path)
 
         skill_profile = self.skill_extractor.extract(
             text=doc.text,
-            tables=doc.tables
+            tables=doc.tables,
+            usellm=usellm
         )
 
         skills_data = [

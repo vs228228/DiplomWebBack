@@ -50,20 +50,31 @@ class TextExtractor:
         return text
 
     def _extract_docx(self, path: str) -> ExtractedDocument:
-
         doc = Document(path)
 
-        paragraphs = [p.text for p in doc.paragraphs if p.text.strip()]
+        full_content = []
 
-        tables = []
+        for p in doc.paragraphs:
+            if p.text.strip():
+                full_content.append(p.text.strip())
 
+        tables_data = []
         for table in doc.tables:
-            t = []
+            t_rows = []
             for row in table.rows:
-                t.append([cell.text.strip() for cell in row.cells])
-            tables.append(t)
+                cells = []
+                for cell in row.cells:
+                    c_text = cell.text.strip()
+                    if not cells or c_text != cells[-1]:
+                        cells.append(c_text)
+
+                if any(cells):
+                    t_rows.append(cells)
+                    full_content.append(" | ".join([c for c in cells if c]))
+
+            tables_data.append(t_rows)
 
         return ExtractedDocument(
-            text="\n".join(paragraphs),
-            tables=tables
+            text="\n".join(full_content),
+            tables=tables_data
         )
