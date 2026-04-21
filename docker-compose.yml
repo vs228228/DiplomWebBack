@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: ./MasterHRAIModule
+      dockerfile: Dockerfile
+
+    ports:
+      - "8000:8000"
+
+    volumes:
+      - ./MasterHRAIModule/ru_model:/app/ru_model
+
+    environment:
+      - MODEL_PATH=/app/ru_model
+
+    restart: unless-stopped
