@@ -1,11 +1,12 @@
 ﻿using DiplomWebBack.Application.Services.Interfaces;
+using DiplomWebBack.Application.Usecases.Command.User;
 using DiplomWebBack.Domain.CustomExceptions;
 using DiplomWebBack.Domain.Interfaces;
 using DiplomWebBack.Domain.Repos;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 
-namespace DiplomWebBack.Application.Usecases.Command.User
+namespace DiplomWebBack.Application.Usecases.CommandHandlers.User
 {
     public class UploadAvatarCommandHandler : IRequestHandler<UploadAvatarCommand, Unit>
     {
@@ -37,7 +38,9 @@ namespace DiplomWebBack.Application.Usecases.Command.User
                 throw new BadRequestException("File is empty");
             }
 
-            var userAvatarPath = await _fileService.SaveFilesAsync(new List<IFormFile> { request.File }, new List<string> { user.Id.ToString() + ".jpg"});
+            var fileName = $"{user.Id.ToString()}_{DateTime.UtcNow:yyyy-MM-dd_HH-mm-ss}.jpg";
+
+            var userAvatarPath = await _fileService.SaveFilesAsync(new List<IFormFile> { request.File }, new List<string> { fileName });
 
             user.Avatar = userAvatarPath[0];
 
