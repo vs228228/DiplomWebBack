@@ -1,8 +1,6 @@
 ﻿using DiplomWebBack.Application.Usecases.Command.Projects;
 using DiplomWebBack.Domain.CustomExceptions;
-using DiplomWebBack.Domain.Entities;
 using DiplomWebBack.Domain.Entities.m2m;
-using DiplomWebBack.Domain.Enums;
 using DiplomWebBack.Domain.Interfaces;
 using DiplomWebBack.Domain.Repos;
 using DiplomWebBack.DomainRepos.Repos;
@@ -51,7 +49,7 @@ namespace DiplomWebBack.Application.Usecases.CommandHandlers.Project
                 throw new BadRequestException("Не все пользователи существуют");
             }*/ // закомментил т.к. Женька то просит добавить то просит удалить, так что фиг его знает, вдруг снова понадобится
 
-            var tags = await _tagsRepository.GetByIdsAsync(request.Project.Tags, cancellationToken);
+            var tags = await _tagsRepository.GetByIdsAsync(request.Project.Tags.Select(t => t.Id).ToList(), cancellationToken);
 
             /*var userToProjects = request.Project.Users
                 .Select(u => new UserToProject
@@ -98,7 +96,7 @@ namespace DiplomWebBack.Application.Usecases.CommandHandlers.Project
 
             foreach (var tag in request.Project.Tags)
             {
-                project.ProjectTags.Add(new TagToProject() { TagId = tag });
+                project.ProjectTags.Add(new TagToProject() { TagId = tag.Id, Weight = tag.Weight, Year = tag.Year });
             }
 
             await _projectRepository.AddAsync(project, cancellationToken);

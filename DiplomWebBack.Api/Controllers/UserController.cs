@@ -5,6 +5,7 @@ using DiplomWebBack.Application.Usecases.Command.User;
 using DiplomWebBack.Application.Usecases.Query.User;
 using DiplomWebBack.Domain.Entities;
 using DiplomWebBack.Domain.Entities.Responses;
+using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -104,6 +105,24 @@ namespace DiplomWebBack.Api.Controllers
             await _mediator.Send(new UploadAvatarCommand(userId, request.File), cancellationToken);
 
             return Ok();
+        }
+
+        /// <summary>
+        /// Возвращает список лучших проектов для юзера
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpPost("match")]
+        public async Task<ActionResult<List<ProjectMatchResponseDto>>> MatchProjects([FromBody] MatchProjectsRequestDto dto, CancellationToken cancellationToken)
+        {
+            var userId = HttpContext.GetCurrentUserId();
+
+            var request = new MatchProjectCommand(userId, dto);
+
+            var result = await _mediator.Send(request, cancellationToken);
+
+            return Ok(result);
         }
     }
 }

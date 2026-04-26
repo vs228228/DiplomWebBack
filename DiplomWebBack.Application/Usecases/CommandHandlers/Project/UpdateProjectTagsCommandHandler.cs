@@ -5,11 +5,6 @@ using DiplomWebBack.Domain.GetByIdModels;
 using DiplomWebBack.Domain.Repos;
 using DiplomWebBack.DomainRepos.Repos;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiplomWebBack.Application.Usecases.CommandHandlers.Project
 {
@@ -52,7 +47,7 @@ namespace DiplomWebBack.Application.Usecases.CommandHandlers.Project
 
             foreach (var tag in tags)
             {
-                project.ProjectTags.Add(new TagToProject() { TagId = tag, ProjectId = project.Id });
+                project.ProjectTags.Add(new TagToProject() { TagId = tag.Id, ProjectId = project.Id, Weight = tag.Weight, Year = tag.Year });
             }
 
             await _projectRepository.UpdateAsync(project);

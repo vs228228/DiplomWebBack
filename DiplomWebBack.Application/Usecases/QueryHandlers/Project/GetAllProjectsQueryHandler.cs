@@ -26,7 +26,8 @@ namespace DiplomWebBack.Application.Usecases.QueryHandlers.Project
                 cancellationToken,
                 request.Request.SearchBy,
                 request.Request.FilterByCreator,
-                request.Request.FiltredByTags);
+                request.Request.FiltredByTags,
+                request.Request.ExceptUser);
 
             return projects.Adapt<PaginatedList<ProjectResponseDto>>();
         }

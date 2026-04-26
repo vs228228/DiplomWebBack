@@ -13,7 +13,8 @@ namespace DiplomWebBack.Domain.Repos
             CancellationToken cancellationToken,
             string search = "",
             IEnumerable<Guid> filtredByUser = null,
-            IEnumerable<Guid> filtredByTags = null);
+            IEnumerable<Guid> filtredByTags = null,
+            Guid? ExceptUser = null);
 
         Task<ICollection<UserToProject>> GetUsersAsync(Guid projectId, CancellationToken cancellationToken);
         Task<ICollection<UserToProject>> GetEmployeesAsync(Guid projectId, CancellationToken cancellationToken);
@@ -24,5 +25,6 @@ namespace DiplomWebBack.Domain.Repos
              Expression<Func<Project, bool>> condition,
              CancellationToken cancellationToken);
         Task DeleteAsync(Guid projectId, CancellationToken cancellationToken);
+        Task<ICollection<Project>> GetProjectsByIds(List<Guid> ids, CancellationToken cancellationToken);
     }
 }

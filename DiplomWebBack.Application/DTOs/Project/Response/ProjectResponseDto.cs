@@ -1,4 +1,5 @@
-﻿using DiplomWebBack.Application.DTOs.User.Response;
+﻿using DiplomWebBack.Application.DTOs.Project.Request;
+using DiplomWebBack.Application.DTOs.User.Response;
 using DiplomWebBack.Domain.Entities;
 
 namespace DiplomWebBack.Application.DTOs.Project.Response
@@ -15,7 +16,7 @@ namespace DiplomWebBack.Application.DTOs.Project.Response
 
         public UserProfileDto CreatedBy { get; set; }
 
-        public ICollection<Tag> Tags { get; set; } = new List<Tag>();
+        public ICollection<ProjectTagResponseDto> Tags { get; set; } = new List<ProjectTagResponseDto>();
 
         public ICollection<UserProjectResponseDto> Users { get; set; } = new List<UserProjectResponseDto>();
         public bool CanEdit { get; set; }

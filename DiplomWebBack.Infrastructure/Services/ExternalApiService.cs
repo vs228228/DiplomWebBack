@@ -1,4 +1,5 @@
-﻿using DiplomWebBack.Domain.Entities.Responses;
+﻿using DiplomWebBack.Domain.Entities;
+using DiplomWebBack.Domain.Entities.Responses;
 using DiplomWebBack.Domain.Interfaces;
 using DiplomWebBack.Infrastructure.Settings;
 using Microsoft.AspNetCore.Http;
@@ -62,15 +63,46 @@ namespace DiplomWebBack.Infrastructure.Services
             return await response.Content.ReadFromJsonAsync<ResumeAnalysisResponse>(cancellationToken: ct);
         }
 
-        public async Task<SuggestionsResponse> GetSuggestionsAsync(string skill, CancellationToken ct)
+        public async Task<List<ProjectMatchResponse>> MatchProjectsAsync(UserSkillsDocument userSkills, IEnumerable<Project> projects, CancellationToken ct)
         {
-            var response = await _httpClient.GetAsync(
-                $"{_options.Endpoints.GetSuggestions}?skill={skill}",
+            projects = new List<Project> { projects.FirstOrDefault() };
+
+            // 1. Формируем request
+            var request = new
+            {
+                candidate = new
+                {
+                    skills = userSkills.Skills.Select(s => new
+                    {
+                        name = s.Name,
+                        years = s.Years
+                    })
+                },
+                projects = projects.Select(p => new
+                {
+                    id = p.Id.ToString(),
+                    name = p.Title,
+                    skills = p.ProjectTags.Select(pt => new
+                    {
+                        name = pt.Tag.Title,
+                        required_years = pt.Year,
+                        weight = pt.Weight
+                    })
+                })
+            };
+
+            // 2. Запрос во внешний API
+            var response = await _httpClient.PostAsJsonAsync(
+                _options.Endpoints.MatchProjects,
+                request,
                 ct);
 
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadFromJsonAsync<SuggestionsResponse>(cancellationToken: ct);
+            // 3. Парсинг ответа
+            var result = await response.Content.ReadFromJsonAsync<List<ProjectMatchResponse>>(cancellationToken: ct);
+
+            return result;
         }
     }
 }
