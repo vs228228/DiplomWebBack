@@ -1,7 +1,7 @@
-﻿using DiplomWebBack.Domain.Entities;
+﻿using DiplomWebBack.Application.DTOs.Project.Request;
 using MediatR;
 
 namespace DiplomWebBack.Application.Usecases.Query.Projects
 {
-    public record GetProjectTagsQuery(Guid ProjectId, Guid UserId) : IRequest<IEnumerable<Tag>>;
+    public record GetProjectTagsQuery(Guid ProjectId, Guid UserId) : IRequest<IEnumerable<ProjectTagRequestDto>>;
 }

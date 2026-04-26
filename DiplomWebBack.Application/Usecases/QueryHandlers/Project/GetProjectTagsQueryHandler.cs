@@ -1,14 +1,16 @@
-﻿using DiplomWebBack.Application.DTOs.User.Response;
+﻿using DiplomWebBack.Application.DTOs.Project.Request;
+using DiplomWebBack.Application.DTOs.User.Response;
 using DiplomWebBack.Application.Services.Interfaces;
 using DiplomWebBack.Application.Usecases.Query.Projects;
 using DiplomWebBack.Domain.CustomExceptions;
 using DiplomWebBack.Domain.Entities;
 using DiplomWebBack.Domain.Repos;
+using Mapster;
 using MediatR;
 
 namespace DiplomWebBack.Application.Usecases.QueryHandlers.Project
 {
-    public class GetProjectTagsQueryHandler : IRequestHandler<GetProjectTagsQuery, IEnumerable<Tag>>
+    public class GetProjectTagsQueryHandler : IRequestHandler<GetProjectTagsQuery, IEnumerable<ProjectTagRequestDto>>
     {
         private readonly IUserVerificationService _userVerificationService;
         private readonly IProjectRepository _projectRepository;
@@ -19,7 +21,7 @@ namespace DiplomWebBack.Application.Usecases.QueryHandlers.Project
             _userVerificationService = userVerificationService;
         }
 
-        public async Task<IEnumerable<Tag>> Handle(GetProjectTagsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<ProjectTagRequestDto>> Handle(GetProjectTagsQuery request, CancellationToken cancellationToken)
         {
             var user = await _userVerificationService.CheckIfUserValidAndGetAsync(request.UserId, cancellationToken);
 
@@ -32,7 +34,7 @@ namespace DiplomWebBack.Application.Usecases.QueryHandlers.Project
 
             var tags = await _projectRepository.GetTagsAsync(request.ProjectId, cancellationToken);
 
-            return tags;
+            return tags.Adapt<List<ProjectTagRequestDto>>();
         }
     }
 }

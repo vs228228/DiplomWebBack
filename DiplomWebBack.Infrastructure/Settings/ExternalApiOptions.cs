@@ -16,6 +16,6 @@ namespace DiplomWebBack.Infrastructure.Settings
     {
         public string ExtractSkills { get; set; }
         public string AnalyzeResume { get; set; }
-        public string GetSuggestions { get; set; }
+        public string MatchProjects { get; set; }
     }
 }

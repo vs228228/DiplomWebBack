@@ -25,7 +25,8 @@ namespace DiplomWebBack.Infrastructure.Repos
             CancellationToken cancellationToken,
             string search = "",
             IEnumerable<Guid> filtredByUser = null,
-            IEnumerable<Guid> filtredByTags = null)
+            IEnumerable<Guid> filtredByTags = null,
+            Guid? ExceptUser = null)
         {
             var query = _dbContext.Project
                 .AsNoTracking()
@@ -33,6 +34,7 @@ namespace DiplomWebBack.Infrastructure.Repos
                 .Where(p => p.Title.Contains(search))
                 .OptionalWhere(filtredByUser != null, p => filtredByUser.Any(cb => cb == p.CreatedById))
                 .OptionalWhere(filtredByTags != null, p => p.ProjectTags.Any(pt => filtredByTags.Any(t => t == pt.TagId)))
+                .OptionalWhere(ExceptUser != null, p => p.UserToProjects.Any(pu => pu.UserId != ExceptUser))
                 .Include(p => p.UserToProjects)
                     .ThenInclude(up => up.User)
                 .Include(p => p.ProjectTags)
@@ -123,6 +125,17 @@ namespace DiplomWebBack.Infrastructure.Repos
             project.IsDelete = true;
 
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<ICollection<Project>> GetProjectsByIds(List<Guid> ids, CancellationToken cancellationToken)
+        {
+            var idsList = ids.ToList();
+
+            return await _dbContext.Project
+               /* .Where(p => ids.Contains(p.Id))*/
+                .Include(p => p.ProjectTags)
+                    .ThenInclude(pt => pt.Tag)
+                .ToListAsync(cancellationToken);
         }
     }
 }

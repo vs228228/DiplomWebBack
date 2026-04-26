@@ -11,5 +11,6 @@ namespace DiplomWebBack.Application.DTOs.Project.Request
         int PageSize = 10,
         string SearchBy = "",
         IEnumerable<Guid>? FilterByCreator = null!, 
-        IEnumerable<Guid>? FiltredByTags = null!);
+        IEnumerable<Guid>? FiltredByTags = null!,
+        Guid? ExceptUser = null);
 }

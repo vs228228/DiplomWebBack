@@ -1,4 +1,5 @@
-﻿using DiplomWebBack.Application.DTOs.Project.Response;
+﻿using DiplomWebBack.Application.DTOs.Project;
+using DiplomWebBack.Application.DTOs.Project.Response;
 using DiplomWebBack.Application.DTOs.User.Response;
 using DiplomWebBack.Domain.Entities;
 using DiplomWebBack.Domain.Entities.m2m;
@@ -24,6 +25,12 @@ namespace DiplomWebBack.Application.MapRules
             config.NewConfig<TagToProject, Tag>()
                 .Map(dest => dest.Id, src => src.TagId)
                 .Map(dest => dest.Title, src => src.Tag.Title);
+
+            config.NewConfig<TagToProject, ProjectTagResponseDto>()
+                .Map(dest => dest.Id, src => src.TagId)
+                .Map(dest => dest.Title, src => src.Tag.Title)
+                .Map(dest => dest.Weight, src => src.Weight)
+                .Map(dest => dest.Year, src => src.Year);
 
             config.NewConfig<Project, ProjectResponseDto>()
                 .Map(dest => dest.CreatedBy, src => src.CreatedBy)

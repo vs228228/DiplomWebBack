@@ -1,4 +1,5 @@
-﻿using DiplomWebBack.Domain.Entities.Responses;
+﻿using DiplomWebBack.Domain.Entities;
+using DiplomWebBack.Domain.Entities.Responses;
 using Microsoft.AspNetCore.Http;
 
 namespace DiplomWebBack.Domain.Interfaces
@@ -9,6 +10,6 @@ namespace DiplomWebBack.Domain.Interfaces
         IFormFile file,
         CancellationToken ct);
         Task<ResumeAnalysisResponse> AnalyzeResumeAsync(string text, CancellationToken ct);
-        Task<SuggestionsResponse> GetSuggestionsAsync(string skill, CancellationToken ct);
+        Task<List<ProjectMatchResponse>> MatchProjectsAsync(UserSkillsDocument userSkills, IEnumerable<Project> projects, CancellationToken ct);
     }
 }
