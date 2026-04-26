@@ -22,9 +22,9 @@ namespace DiplomWebBack.Domain.Entities.Responses
         public string Name { get; set; }
 
         [JsonPropertyName("level")]
-        public string Level { get; set; }
+        public string? Level { get; set; }
 
         [JsonPropertyName("years")]
-        public double Years { get; set; }
+        public double? Years { get; set; }
     }
 }
