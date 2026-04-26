@@ -40,7 +40,7 @@ namespace DiplomWebBack.Application.Usecases.CommandHandlers.User
 
             var matchingProjects = await _externalApiService.MatchProjectsAsync(skills, projects, cancellationToken);
 
-            matchingProjects = matchingProjects.Where(p => p.Score > request.Request.MinScorePercent).ToList();
+            matchingProjects = matchingProjects.Where(p => p.Score >= request.Request.MinScorePercent).ToList();
 
             matchingProjects.OrderBy(p => p.Score);
 

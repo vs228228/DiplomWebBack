@@ -132,7 +132,7 @@ namespace DiplomWebBack.Infrastructure.Repos
             var idsList = ids.ToList();
 
             return await _dbContext.Project
-               /* .Where(p => ids.Contains(p.Id))*/
+                .Where(p => ids.Contains(p.Id))
                 .Include(p => p.ProjectTags)
                     .ThenInclude(pt => pt.Tag)
                 .ToListAsync(cancellationToken);
