@@ -1,8 +1,10 @@
 ﻿using DiplomWebBack.Api.Extensions;
 using DiplomWebBack.Application.DTOs.Project.Request;
+using DiplomWebBack.Application.DTOs.Project.Request.DiplomWebBack.Application.DTOs.Project.Request;
 using DiplomWebBack.Application.DTOs.Project.Response;
 using DiplomWebBack.Application.DTOs.User.Response;
 using DiplomWebBack.Application.Usecases.Command.Projects;
+using DiplomWebBack.Application.Usecases.CommandHandlers.Project;
 using DiplomWebBack.Application.Usecases.Query.Projects;
 using DiplomWebBack.Domain.Entities;
 using MediatR;
@@ -194,12 +196,29 @@ public class ProjectController : ControllerBase
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpGet("{projectId}/tags")]
-    public async Task<ActionResult<IEnumerable<Tag>>> GetTagsByProjectIdAsync([FromRoute] Guid projectId, CancellationToken cancellationToken)
+    public async Task<ActionResult> GetTagsByProjectIdAsync([FromRoute] Guid projectId, CancellationToken cancellationToken)
     {
         var userId = HttpContext.GetCurrentUserId();
 
         var tags = await _mediator.Send(new GetProjectTagsQuery(projectId, userId), cancellationToken);
 
         return Ok(tags);
+    }
+
+    /// <summary>
+    /// Добавить одного пользователя в проект (или обновить его роль)
+    /// </summary>
+    /// <param name="projectId"></param>
+    /// <param name="dto"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpPost("{projectId}/user")]
+    public async Task<ActionResult> AddUserAsync([FromRoute] Guid projectId, [FromBody] AddProjectUserRequestDto dto, CancellationToken cancellationToken)
+    {
+        var userId = HttpContext.GetCurrentUserId();
+
+        await _mediator.Send(new AddProjectUserCommand(dto, projectId, userId), cancellationToken);
+
+        return Ok();
     }
 }

@@ -1,16 +1,18 @@
 ﻿using DiplomWebBack.Application.DTOs.Project.Request;
+using DiplomWebBack.Application.DTOs.Project.Response;
 using DiplomWebBack.Application.DTOs.User.Response;
 using DiplomWebBack.Application.Services.Interfaces;
 using DiplomWebBack.Application.Usecases.Query.Projects;
 using DiplomWebBack.Domain.CustomExceptions;
 using DiplomWebBack.Domain.Entities;
+using DiplomWebBack.Domain.GetByIdModels;
 using DiplomWebBack.Domain.Repos;
 using Mapster;
 using MediatR;
 
 namespace DiplomWebBack.Application.Usecases.QueryHandlers.Project
 {
-    public class GetProjectTagsQueryHandler : IRequestHandler<GetProjectTagsQuery, IEnumerable<ProjectTagRequestDto>>
+    public class GetProjectTagsQueryHandler : IRequestHandler<GetProjectTagsQuery, AllProjectTagsResponse>
     {
         private readonly IUserVerificationService _userVerificationService;
         private readonly IProjectRepository _projectRepository;
@@ -21,7 +23,7 @@ namespace DiplomWebBack.Application.Usecases.QueryHandlers.Project
             _userVerificationService = userVerificationService;
         }
 
-        public async Task<IEnumerable<ProjectTagRequestDto>> Handle(GetProjectTagsQuery request, CancellationToken cancellationToken)
+        public async Task<AllProjectTagsResponse> Handle(GetProjectTagsQuery request, CancellationToken cancellationToken)
         {
             var user = await _userVerificationService.CheckIfUserValidAndGetAsync(request.UserId, cancellationToken);
 
@@ -32,9 +34,24 @@ namespace DiplomWebBack.Application.Usecases.QueryHandlers.Project
                 throw new NotFoundException("Проект не найден");
             }
 
-            var tags = await _projectRepository.GetTagsAsync(request.ProjectId, cancellationToken);
+            var project = await _projectRepository.GetProjectByIdAsync(new GetProjectByIdModel
+            {
+                Id = request.ProjectId,
+                IncludeTags = true,
+                IncludeEmployee = false,
+                IncludeCreatedBy = false,
+                TrackChanges = false
+            }, cancellationToken);
 
-            return tags.Adapt<List<ProjectTagRequestDto>>();
+            var tags = project.ProjectTags.Select(t => new ProjectTagResponseDto
+            {
+                Id = t.TagId,
+                Year = t.Year,
+                Weight = t.Weight,
+                Title = t.Tag.Title
+            });
+
+            return new AllProjectTagsResponse(){ Title = project.Title, Tags = tags };
         }
     }
 }

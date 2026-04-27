@@ -28,13 +28,15 @@ namespace DiplomWebBack.Infrastructure.Repos
             IEnumerable<Guid> filtredByTags = null,
             Guid? ExceptUser = null)
         {
+            
+
             var query = _dbContext.Project
                 .AsNoTracking()
                 .Where(p => p.IsDelete == false)
                 .Where(p => p.Title.Contains(search))
                 .OptionalWhere(filtredByUser != null, p => filtredByUser.Any(cb => cb == p.CreatedById))
                 .OptionalWhere(filtredByTags != null, p => p.ProjectTags.Any(pt => filtredByTags.Any(t => t == pt.TagId)))
-                .OptionalWhere(ExceptUser != null, p => p.UserToProjects.Any(pu => pu.UserId != ExceptUser))
+                .OptionalWhere(ExceptUser != null, p => p.UserToProjects.All(pu => pu.UserId != ExceptUser))
                 .Include(p => p.UserToProjects)
                     .ThenInclude(up => up.User)
                 .Include(p => p.ProjectTags)
@@ -43,6 +45,24 @@ namespace DiplomWebBack.Infrastructure.Repos
                 .OrderBy(p => p.CreatedAt);
 
             var totalCount = await query.CountAsync(cancellationToken);
+
+            if(pageNumber == -1)
+            {
+                var list2 = await query.ToListAsync(cancellationToken);
+
+                return new PaginatedList<Project>
+                {
+                    List = list2,
+                    Meta = new MetaForPaginatedList
+                    {
+                        PageNumber = pageNumber,
+                        PageSize = pageSize,
+                        TotalCount = totalCount,
+                        TotalPageCount = (int)Math.Ceiling(totalCount / (double)pageSize)
+                    }
+                };
+            }
+
             var list = await query
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
@@ -99,12 +119,12 @@ namespace DiplomWebBack.Infrastructure.Repos
             .FirstOrDefaultAsync(cancellationToken); 
         }
 
-        public async Task<ICollection<Tag>> GetTagsAsync(Guid projectId, CancellationToken cancellationToken)
+        public async Task<ICollection<TagToProject>> GetTagsAsync(Guid projectId, CancellationToken cancellationToken)
         {
             return await _dbContext.TagsToProjects
                 .AsNoTracking()
                 .Where(tp => tp.ProjectId == projectId)
-                .Select(tp => tp.Tag)
+                .Include(t => t.Tag)
                 .ToListAsync(cancellationToken);
         }
 

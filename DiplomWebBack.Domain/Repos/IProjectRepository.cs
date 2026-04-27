@@ -20,7 +20,7 @@ namespace DiplomWebBack.Domain.Repos
         Task<ICollection<UserToProject>> GetEmployeesAsync(Guid projectId, CancellationToken cancellationToken);
         Task<ICollection<UserToProject>> GetManagersAsync(Guid projectId, CancellationToken cancellationToken);
         Task<Project> GetProjectByIdAsync(GetProjectByIdModel model, CancellationToken cancellationToken);
-        Task<ICollection<Tag>> GetTagsAsync(Guid projectId, CancellationToken cancellationToken);
+        Task<ICollection<TagToProject>> GetTagsAsync(Guid projectId, CancellationToken cancellationToken);
         Task<bool> IsExistByConditionAsync(
              Expression<Func<Project, bool>> condition,
              CancellationToken cancellationToken);
