@@ -1,6 +1,7 @@
 ﻿using DiplomWebBack.Application.DTOs.User.Response;
 using DiplomWebBack.Application.Usecases.Query.User;
 using DiplomWebBack.Domain.CustomExceptions;
+using DiplomWebBack.Domain.Enums;
 using DiplomWebBack.Domain.Repos;
 using Mapster;
 using MediatR;
@@ -34,7 +35,22 @@ namespace DiplomWebBack.Application.Usecases.QueryHandlers.User
 
             var ans =  user.Adapt<UserProfileDto>();
 
-            ans.CanEdit = user.Role == Domain.Enums.UserRole.Admin || user.Role == Domain.Enums.UserRole.Manager ? true : false;
+            if(initiator.Role == UserRole.Admin)
+            {
+                ans.CanEdit = true;
+            }
+            else if(initiator.Id == user.Id)
+            {
+                ans.CanEdit = true;
+            }
+            else if (initiator.Role == UserRole.Manager && user.Role == UserRole.Employee)
+            {
+                ans.CanEdit = true;
+            }
+            else
+            {
+                ans.CanEdit = false;
+            }
 
             return ans;
         }
