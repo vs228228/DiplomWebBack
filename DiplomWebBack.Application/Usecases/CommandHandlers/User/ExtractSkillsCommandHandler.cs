@@ -2,6 +2,7 @@
 using DiplomWebBack.Application.Services.Interfaces;
 using DiplomWebBack.Application.Usecases.Command.User;
 using DiplomWebBack.Domain.CustomExceptions;
+using DiplomWebBack.Domain.Enums;
 using DiplomWebBack.Domain.Interfaces;
 using DiplomWebBack.Domain.Repos;
 using Mapster;
@@ -24,8 +25,17 @@ namespace DiplomWebBack.Application.Usecases.CommandHandlers.User
 
         public async Task<SkillResponseDto> Handle(ExtractSkillsCommand request, CancellationToken cancellationToken)
         {
+            var initiator = await _userVerificationService.CheckIfUserValidAndGetAsync(request.InitiatorId, cancellationToken);
+
+            if(request.UserId != request.InitiatorId && initiator.Role == UserRole.Employee)
+            {
+                throw new ForbiddenException("Нет доступа к обновлению резюме этого юзера");
+            }
+
             if (request.ResumeFile == null || request.ResumeFile.Length == 0)
-                throw new BadRequestException("File is empty");
+            {
+                throw new BadRequestException("Файл пуст");
+            }
 
             var user = await _userVerificationService.CheckIfUserValidAndGetAsync(request.UserId, cancellationToken);
 

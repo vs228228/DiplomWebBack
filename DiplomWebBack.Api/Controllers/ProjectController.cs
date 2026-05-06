@@ -221,4 +221,21 @@ public class ProjectController : ControllerBase
 
         return Ok();
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="userId">Айди того, чьи проекты мы хотим узнать</param>
+    /// <param name="includeCreatedProjects">True получаем проекты где сотрудник работяга + где он создатель. False только где он работяга</param>
+    /// <param name="ct"></param>
+    /// <returns></returns>
+    [HttpGet("{userId}/all")]
+    public async Task<ActionResult> GetAllProjectWithThisUser([FromRoute] Guid userId, [FromQuery] bool includeCreatedProjects = false, CancellationToken ct = new CancellationToken())
+    {
+        var query = new GetAllUserProjectQuery(userId, includeCreatedProjects);
+
+        var ans = await _mediator.Send(query, ct);
+
+        return Ok(ans);
+    }
 }

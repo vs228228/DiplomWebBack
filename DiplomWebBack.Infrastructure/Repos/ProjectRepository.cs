@@ -157,5 +157,22 @@ namespace DiplomWebBack.Infrastructure.Repos
                     .ThenInclude(pt => pt.Tag)
                 .ToListAsync(cancellationToken);
         }
+
+        public async Task<ICollection<Project>> GetAllProjectByUserId(
+            Guid userId,
+            bool includeCreatedProjects = false,
+            CancellationToken cancellationToken = default)
+        {
+            return await _dbContext.Project
+                .Where(p =>
+                    (p.UserToProjects != null && p.UserToProjects.Any(utp => utp.UserId == userId))
+                    || (includeCreatedProjects && p.CreatedById == userId))
+                .Include(p => p.UserToProjects)
+                    .ThenInclude(up => up.User)
+                .Include(p => p.ProjectTags)
+                    .ThenInclude(p => p.Tag)
+                .Include(p => p.CreatedBy)
+                .ToListAsync(cancellationToken);
+        }
     }
 }

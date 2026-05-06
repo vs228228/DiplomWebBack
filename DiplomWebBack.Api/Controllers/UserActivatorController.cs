@@ -42,5 +42,15 @@ namespace DiplomWebBack.Api.Controllers
 
             return Ok();
         }
+
+        [HttpPost("{userId}/cancel-user")]
+        public async Task<ActionResult> CancellUserAsync([FromRoute] Guid userId, CancellationToken cancellationToken)
+        {
+            var initiatorId = HttpContext.GetCurrentUserId();
+
+            await _mediator.Send(new CanlcelUserCommand(userId, initiatorId), cancellationToken);
+
+            return Ok();
+        }
     }
 }

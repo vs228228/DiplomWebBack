@@ -26,7 +26,7 @@ namespace DiplomWebBack.Application.Usecases.QueryHandlers.User
 
             if(request.UserId == request.InitiatorId)
             {
-                return (await _repository.GetByUserIdAsync(initiator.Id)).Adapt<SkillExtraction>();
+                return (await _repository.GetByUserIdAsync(initiator.Id, request.SearchBy)).Adapt<SkillExtraction>();
             }
 
             if(false) // потом рассмотреть вариант того кто это может делать
@@ -34,7 +34,7 @@ namespace DiplomWebBack.Application.Usecases.QueryHandlers.User
                 throw new ForbiddenException("Юзер не moje");
             }
 
-            return (await _repository.GetByUserIdAsync(request.UserId)).Adapt<SkillExtraction>();
+            return (await _repository.GetByUserIdAsync(request.UserId, request.SearchBy)).Adapt<SkillExtraction>();
         }
     }
 }

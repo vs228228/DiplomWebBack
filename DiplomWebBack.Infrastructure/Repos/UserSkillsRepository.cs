@@ -1,5 +1,6 @@
 ﻿using DiplomWebBack.Domain.Entities.Responses;
 using DiplomWebBack.Domain.Repos;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace DiplomWebBack.Infrastructure.Repos
@@ -79,12 +80,27 @@ namespace DiplomWebBack.Infrastructure.Repos
                 update);
         }
 
-        public async Task<UserSkillsDocument?> GetByUserIdAsync(Guid userId)
+        public async Task<UserSkillsDocument?> GetByUserIdAsync(Guid userId, string searchBy = "")
         {
-            return await _collection
+            var document = await _collection
                 .Find(x => x.UserId == userId)
                 .SortByDescending(x => x.CreatedAt)
                 .FirstOrDefaultAsync();
+
+            if (document == null)
+                return null;
+
+            if (!string.IsNullOrWhiteSpace(searchBy))
+            {
+                document.Skills = document.Skills
+                    .Where(s => s.Name != null &&
+                                s.Name.Contains(searchBy, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+                document.TotalFound = document.Skills.Count;
+            }
+
+            return document;
         }
 
         public async Task RemoveSkillAsync(Guid userId, Guid skillId)

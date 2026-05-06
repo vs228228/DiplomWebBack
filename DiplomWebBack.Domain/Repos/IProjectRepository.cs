@@ -26,5 +26,7 @@ namespace DiplomWebBack.Domain.Repos
              CancellationToken cancellationToken);
         Task DeleteAsync(Guid projectId, CancellationToken cancellationToken);
         Task<ICollection<Project>> GetProjectsByIds(List<Guid> ids, CancellationToken cancellationToken);
+
+        Task<ICollection<Project>> GetAllProjectByUserId(Guid userId, bool includeCreatedProjects = false, CancellationToken cancellationToken = default);
     }
 }

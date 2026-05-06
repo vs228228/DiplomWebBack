@@ -27,12 +27,12 @@ namespace DiplomWebBack.Api.Controllers
         /// <returns></returns>
         [Produces("application/json")]
         [Consumes("multipart/form-data")]
-        [HttpPost("extract-skills")]
-        public async Task<ActionResult<SkillExtraction>> ExtractSkills(IFormFile resumeFile, CancellationToken ct)
+        [HttpPost("{userId}/extract-skills")]
+        public async Task<ActionResult<SkillExtraction>> ExtractSkills(IFormFile resumeFile, [FromRoute] Guid userId, CancellationToken ct)
         {
-            var userId = HttpContext.GetCurrentUserId();
+            var initiatorId = HttpContext.GetCurrentUserId();
 
-            var result = await _mediator.Send(new ExtractSkillsCommand(resumeFile, userId), ct);
+            var result = await _mediator.Send(new ExtractSkillsCommand(resumeFile, userId, initiatorId), ct);
 
             return Ok(result);
         }
@@ -44,11 +44,11 @@ namespace DiplomWebBack.Api.Controllers
         /// <param name="ct"></param>
         /// <returns></returns>
         [HttpGet("{userId}")]
-        public async Task<ActionResult<SkillExtraction>> GetUserSkillsAsync([FromRoute] Guid userId, CancellationToken ct)
+        public async Task<ActionResult<SkillExtraction>> GetUserSkillsAsync([FromRoute] Guid userId, [FromQuery] string searchBy = "", CancellationToken ct = new CancellationToken())
         {
             var initiatorId = HttpContext.GetCurrentUserId();
 
-            var result = await _mediator.Send(new GetUserSkillsQuery(userId, initiatorId), ct);
+            var result = await _mediator.Send(new GetUserSkillsQuery(userId, initiatorId, searchBy), ct);
 
             return Ok(result);
         }
